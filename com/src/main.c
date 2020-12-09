@@ -91,3 +91,44 @@ int main(void)
 //	taskDISABLE_INTERRUPTS();
 //	for( ;; );
 //}
+
+#if (configCHECK_FOR_STACK_OVERFLOW > 0)
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+{
+    volatile signed char *name;
+    volatile xTaskHandle *pxT;
+
+    name = pcTaskName;
+    pxT  = pxTask;
+
+    (void)name;
+    (void)pxT;
+
+    while(1);
+}
+#endif
+
+
+/*-----------------------------------------------------------*/
+/**
+ * @brief	configASSERT callback function
+ * @param 	ulLine		: line where configASSERT was called
+ * @param 	pcFileName	: file where configASSERT was called
+ */
+void vAssertCalled(unsigned long ulLine, const char *const pcFileName)
+{
+	volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+
+	taskENTER_CRITICAL();
+	{
+		printf("[ASSERT] %s:%lu\n", pcFileName, ulLine);
+		/* You can step out of this function to debug the assertion by using
+		 the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+		 value. */
+		while( ulSetToNonZeroInDebuggerToContinue == 0 )
+		{
+		}
+	}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
