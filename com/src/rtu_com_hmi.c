@@ -14,7 +14,7 @@
 #include "lwip/api.h"
 #include<string.h>
 
-//static void prvEmergencyStop(void);
+static void prvEmergencyStop(void);
 static void prvNetconnError(err_t err);
 
 bool stall_detection = true;
@@ -53,9 +53,9 @@ tcp_thread(void *arg)
 
 			newconn->recv_timeout = RCV_TIMEO;
 
-			arm_init();
-			pole_init();
-			lift_init();
+//			arm_init();
+//			pole_init();
+//			lift_init();
 
 			while ((err_recv = netconn_recv(newconn, &buf)) == ERR_OK)
 			{
@@ -97,9 +97,9 @@ tcp_thread(void *arg)
 
 			if( err_recv )	{	lDebug(Error, "Error en funcion NETCONN -netconn_recv-"); prvNetconnError(err_recv);	}
 
-			//prvEmergencyStop();
+			prvEmergencyStop();
 
-			lDebug(Debug, "	- ** 	Desconexion RTU 	** - ");
+			lDebug(Info, "	- ** 	Desconexion RTU 	** - ");
 
 			/* Close connection and discard connection identifier. */
 			netconn_close(newconn);
@@ -154,27 +154,27 @@ static void prvNetconnError(err_t err)
  * @return	never.
  * @note	Stops movements on HMI communication lost.
  */
-//static void prvEmergencyStop(void)
-//{
-//	struct mot_pap_msg *pArmMsg;
-//	struct mot_pap_msg *pPoleMsg;
-//	struct lift_msg  *pLiftMsg;
-//
+static void prvEmergencyStop(void)
+{
+	struct mot_pap_msg *pArmMsg;
+	struct mot_pap_msg *pPoleMsg;
+	struct lift_msg  *pLiftMsg;
+
 //	pArmMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
 //	pArmMsg->type = MOT_PAP_TYPE_STOP;
 //	if (xQueueSend(arm_queue, &pArmMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, " Comando enviado a arm.c exitoso!"); }
 //				else { lDebug(Error, "Comando NO PUDO ser enviado a arm.c"); }
-//
-//	pPoleMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
-//	pPoleMsg->type = MOT_PAP_TYPE_STOP;
-//	if (xQueueSend(pole_queue, &pPoleMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, "Comando enviado a pole.c exitoso!"); }
-//				else { lDebug(Error, "Comando NO PUDO ser enviado a pole.c"); }
-//
-//	pLiftMsg = (struct lift_msg *)pvPortMalloc(sizeof(struct lift_msg));
-//	pLiftMsg->type = LIFT_TYPE_STOP;
-//	if (xQueueSend(lift_queue, &pLiftMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, "Comando enviado a lift.c exitoso!"); }
-//	else { lDebug(Error, "Comando NO PUDO ser enviado a lift.c"); }
-//
-//	return;
-//
-//}
+
+	pPoleMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
+	pPoleMsg->type = MOT_PAP_TYPE_STOP;
+	if (xQueueSend(pole_queue, &pPoleMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, "Comando enviado a pole.c exitoso!"); }
+				else { lDebug(Error, "Comando NO PUDO ser enviado a pole.c"); }
+
+	pLiftMsg = (struct lift_msg *)pvPortMalloc(sizeof(struct lift_msg));
+	pLiftMsg->type = LIFT_TYPE_STOP;
+	if (xQueueSend(lift_queue, &pLiftMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, "Comando enviado a lift.c exitoso!"); }
+	else { lDebug(Error, "Comando NO PUDO ser enviado a lift.c"); }
+
+	return;
+
+}

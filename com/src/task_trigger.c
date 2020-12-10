@@ -26,9 +26,6 @@
 #include "mot_pap.h"
 #include "lift.h"
 
-extern QueueHandle_t lift_queue;
-extern QueueHandle_t pole_queue;
-extern QueueHandle_t arm_queue;
 
 void TaskTriggerMsg(HMICmd_t* pHMICmd)
 {
