@@ -1,69 +1,95 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "math.h"
+#include <stdlib.h>
+#include <stdbool.h>
+
 #include "FreeRTOS.h"
+#include "task.h"
 #include "timers.h"
 #include "queue.h"
 #include "semphr.h"
-#include "task.h"
-#include "stdbool.h"
-//#include "relay.h"
-#include "rtu_com_hmi.h"
-#include "debug.h"
 #include "lift.h"
-
-
+#include "relay.h"
+#include "debug.h"
+#include "board.h"
 
 #define LIFT_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 
-static struct lift lift;
-static void lift_supervisor_task();
+QueueHandle_t lift_queue = NULL;
 
+static struct lift lift;
+
+/**
+ * @brief 	handles the Lift movement.
+ * @param 	par		: unused
+ * @return	never
+ * @note	Receives commands from lift_queue
+ */
 static void lift_task(void *par)
 {
 	struct lift_msg *msg_rcv;
 
-	while (1) {
+	while (true) {
 
 		if (xQueueReceive(lift_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
+			lDebug(Info, "lift: command received");
 
-				switch (msg_rcv->type) {
-				case LIFT_TYPE_UP:
-					lDebug(Info, "LIFT UP");
-
-					break;
-				case LIFT_TYPE_DOWN:
-					lDebug(Info, "LIFT DOWN");
-					break;
-				default:
-					lDebug(Info, "LIFT STOP");
-					break;
+			switch (msg_rcv->type) {
+			case LIFT_TYPE_UP:
+				if (lift.type == LIFT_TYPE_DOWN) {
+					relay_lift_pwr(false);
+					vTaskDelay(
+							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
 				}
+				lift.type = LIFT_TYPE_UP;
+				relay_lift_dir(LIFT_DIRECTION_UP);
+				relay_lift_pwr(true);
+				lDebug(Info, "lift: UP");
+				break;
+			case LIFT_TYPE_DOWN:
+				if (lift.type == LIFT_TYPE_UP) {
+					relay_lift_pwr(false);
+					vTaskDelay(
+							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
+				}
+				lift.type = LIFT_TYPE_DOWN;
+				relay_lift_dir(LIFT_DIRECTION_DOWN);
+				relay_lift_pwr(true);
+				lDebug(Info, "lift: DOWN");
+				break;
+			default:
+				lift.type = LIFT_TYPE_STOP;
+				relay_lift_pwr(false);
+				lDebug(Info, "lift: STOP");
+				break;
+			}
 
-				vPortFree(msg_rcv);
-
-		} else {
-			lDebug(Error, "lift: no command received");
+			vPortFree(msg_rcv);
 		}
 	}
 }
 
-
-static void lift_supervisor_task()
+/**
+ * @brief 	creates the queues, semaphores and endless tasks to handle lift movements.
+ * @return	nothing
+ */
+void lift_init()
 {
+	relay_init();
+	lift_queue = xQueueCreate(5, sizeof(struct lift_msg*));
+
 	lift.type = LIFT_TYPE_STOP;
 	lift.upLimit = false;
 	lift.downLimit = false;
+
+	xTaskCreate(lift_task, "Lift", configMINIMAL_STACK_SIZE, NULL,
+	LIFT_TASK_PRIORITY, NULL);
+	lDebug(Info, "lift: task created");
 }
 
-void lift_init()
+/**
+ * @brief	returns status of the lift task.
+ * @return 	copy of status structure of the task
+ */
+struct lift *lift_status_get(void) /* GPa 201207 retorna (*) */
 {
-	lift_queue = xQueueCreate(5, sizeof(struct lift_msg*));
-	xTaskCreate(lift_task, "lift", configMINIMAL_STACK_SIZE*2, NULL, 4, NULL);
-}
-
-struct lift *lift_get_status(void)
-{
-	lift_supervisor_task();
-	return &lift;
+	return &lift; /* GPa 201207 retorna (&) */
 }

@@ -44,7 +44,7 @@ struct lift {
 
 void lift_init();
 
-struct lift lift_status_get(void);
+struct lift *lift_status_get(void);
 
 #ifdef __cplusplus
 }

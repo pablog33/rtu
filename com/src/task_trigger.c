@@ -26,6 +26,10 @@
 #include "mot_pap.h"
 #include "lift.h"
 
+extern QueueHandle_t lift_queue;
+extern QueueHandle_t pole_queue;
+extern QueueHandle_t arm_queue;
+
 void TaskTriggerMsg(HMICmd_t* pHMICmd)
 {
 	static unsigned char ucPreviousFlagByte;
@@ -162,18 +166,18 @@ void TaskTriggerMsg(HMICmd_t* pHMICmd)
 			else { lDebug(Info, " Se activa el control -CONTROL ENABLE-!"); }
 		}
 		
-		if(bSendToArm)
-		{	pArmMsg = (struct mot_pap_msg*)pvPortMalloc(sizeof(struct mot_pap_msg));
-			if (bTypeStop) { pArmMsg->type = MOT_PAP_TYPE_STOP; }
-			else if (bTypeFreeRunStart) { pArmMsg->type = MOT_PAP_TYPE_FREE_RUNNING; }
-			else if (bTypeAutoStart) { pArmMsg->type = MOT_PAP_TYPE_CLOSED_LOOP; }
-			else { lDebug(Info, " Info bSendToArm"); }
-			pArmMsg->free_run_direction = pHMICmd->freeRunDir;
-			pArmMsg->free_run_speed = pHMICmd->velCmdArm;
-			pArmMsg->closed_loop_setpoint = pHMICmd->posCmdArm;
-			if (xQueueSend(arm_queue, &pArmMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, " Comando enviado a arm.c exitoso!"); }
-			else { lDebug(Debug, "Comando NO PUDO ser enviado a arm.c"); }
-		}
+//		if(bSendToArm)
+//		{	pArmMsg = (struct mot_pap_msg*)pvPortMalloc(sizeof(struct mot_pap_msg));
+//			if (bTypeStop) { pArmMsg->type = MOT_PAP_TYPE_STOP; }
+//			else if (bTypeFreeRunStart) { pArmMsg->type = MOT_PAP_TYPE_FREE_RUNNING; }
+//			else if (bTypeAutoStart) { pArmMsg->type = MOT_PAP_TYPE_CLOSED_LOOP; }
+//			else { lDebug(Info, " Info bSendToArm"); }
+//			pArmMsg->free_run_direction = pHMICmd->freeRunDir;
+//			pArmMsg->free_run_speed = pHMICmd->velCmdArm;
+//			pArmMsg->closed_loop_setpoint = pHMICmd->posCmdArm;
+//			if (xQueueSend(arm_queue, &pArmMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, " Comando enviado a arm.c exitoso!"); }
+//			else { lDebug(Debug, "Comando NO PUDO ser enviado a arm.c"); }
+//		}
 		if (bSendToPole)
 		{
 			pPoleMsg = (struct mot_pap_msg*)pvPortMalloc(sizeof(struct mot_pap_msg));

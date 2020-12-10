@@ -154,13 +154,6 @@ enum { RTU_NETVAR_SIZE = 9 };
 } RTUData_t;
 
 
-/*	-- Declaracion de funciones compartidas --	*/
-struct lift *lift_get_status(void);
-
-/*	-- Declaracion de objetos --	*/
-QueueHandle_t pole_queue;
-QueueHandle_t arm_queue;
-QueueHandle_t lift_queue;
 
 void NetValuesToSendFromRTU(int16_t iServerStatus,RTUData_t* pRTUDataTx);
 
@@ -172,5 +165,9 @@ void NetValuesToSendFromRTU(int16_t iServerStatus,RTUData_t* pRTUDataTx);
 void TaskTriggerMsg(HMICmd_t* pHMICmd);
 
 void vStackIpSetup(void *pvParameters);
+
+void arm_init();
+void pole_init();
+void lift_init();
 
 #endif /* RTU_COM_HMI_H */

@@ -24,6 +24,7 @@
 /*	Motor Control	*/
 #include "mot_pap.h"
 #include "lift.h"
+#include "pole.h"
 
 static uint16_t prvFormatoTramaRecv(uint16_t uiLenDataRecv);
 
@@ -32,7 +33,7 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	/*	Obtengo los valores desde el driver correspondiente a cada eje -Arm, Pole, LIFT-	*/
 	struct mot_pap *pPoleStatus = pole_get_status();
 	struct mot_pap *pArmStatus= arm_get_status();
-	struct lift *pLiftStatus= lift_get_status();
+	struct lift *pLiftStatus= lift_status_get();
 
 	pRTUDataTx->resActArm = pArmStatus->posAct;
 	pRTUDataTx->resActPole = pPoleStatus->posAct;
