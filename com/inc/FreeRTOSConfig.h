@@ -16,8 +16,6 @@
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 
-#define config_ETHERNET_INTERRUPT_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1) /* GPa 201209 */
-
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			0
 #define configMAX_PRIORITIES		8
@@ -26,7 +24,7 @@
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE	( ( uint16_t ) 128 )
 #ifdef __CODE_RED
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 24*1024 ) ) /* GPa 201118 1610 Estaba en 32*1024 */
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 40*1024 ) ) /* GPa 201118 1610 Estaba en 32*1024 */
 #else
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 0 ) )
 #endif
@@ -101,6 +99,8 @@ INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
 PRIORITY THAN THIS! (higher priorities are lower numeric values. */
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
 
+#define config_ETHERNET_INTERRUPT_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1)
+
 /* Interrupt priorities used by the kernel port layer itself.  These are generic
 to all Cortex-M ports, and do not rely on any particular library functions. */
 #define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
@@ -127,6 +127,6 @@ standard names - or at least those used in the unmodified vector table. */
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
 extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
-//#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ ) /* GPa 201209 */
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 #endif /* FREERTOS_CONFIG_H */

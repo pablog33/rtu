@@ -1,33 +1,82 @@
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "FreeRTOS.h"
+#include "task.h"
 
 
-#include "board.h"
+/* LWIP and ENET phy */
 #include "arch/lpc18xx_43xx_emac.h"
 #include "arch/lpc_arch.h"
-#include "arch/sys_arch.h"
+#include "arch/sys_arch.h"							  
 #include "lpc_phy.h" /* For the PHY monitor support */
-#include <rtu_com_hmi.h>
-#include "dout.h"
+
+/* LPC */
+#include "board.h"
+
 #include "debug.h"
+#include "pole.h"
+#include "lift.h"
+#include "dout.h"
+#include "relay.h"
+#include "poncho_rdc.h"
+#include "rtu_com_hmi.h"
 
+#ifdef TEST_GUI
+#include <execinfo.h>
+#include <unistd.h>
+#include "gui.h"
+#endif
 
+#ifdef TEST_GUI
+void handler(int sig) {
+  void *array[10];
+  size_t size;
 
-/*****************************************************************************
- * Public types/enumerations/variables
- ****************************************************************************/
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
 
-uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; /* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  exit(1);
+}
+#endif
 
-/*****************************************************************************
- * Private functions
- ****************************************************************************/
+/* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
+uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; 
 
 /* Sets up system hardware */
 static void prvSetupHardware(void)
-{
+{	  
+#if defined(__FPU_PRESENT) && __FPU_PRESENT == 1
+	fpuInit();
+#endif
+
 	SystemCoreClockUpdate();
+	Board_SystemInit();
+
 	Board_Init();
 	dout_init();
+	relay_init();
+	poncho_rdc_init();
 
+#ifdef TEST_GUI
+    signal(SIGSEGV, handler);   // install our handler
+#endif
+
+    pole_init();
+//	arm_init();
+	lift_init();
+
+#ifdef TEST_GUI
+	gui_init();
+#endif
+			  
 	/* Initial LED DOUT4 state is off to show an unconnected cable state */
 	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12); /* LOW */
 }
@@ -62,35 +111,11 @@ int main(void)
 				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
 				(xTaskHandle *) NULL);
 
-	/* Start the scheduler */
+	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
-	/* Should never arrive here */
-	return 1;
+	return 0;
 }
-
-/*-----------------------------------------------------------*/
-/* GPa 201110 1400 */
-/**
- * @brief	configASSERT callback function
- * @param 	ulLine		: line where configASSERT was called
- * @param 	pcFileName	: file where configASSERT was called
- */
-
-/* This function must be defined in a C source file, not the FreeRTOSConfig.h header file. */
-//void vAssertCalled( const char *pcFile, uint32_t ulLine )
-//{
-///* Inside this function, pcFile holds the name of the source file that contains
-//the line that detected the error, and ulLine holds the line number in the source
-//file. The pcFile and ulLine values can be printed out, or otherwise recorded,
-//before the following infinite loop is entered. */
-//	printf("[ASSERT] %s: %d \r\n", pcFile, ulLine);
-//
-///* Disable interrupts so the tick interrupt stops executing, then sit in a loop
-//so execution does not move past the line that failed the assertion. */
-//	taskDISABLE_INTERRUPTS();
-//	for( ;; );
-//}
 
 #if (configCHECK_FOR_STACK_OVERFLOW > 0)
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
@@ -132,3 +157,42 @@ void vAssertCalled(unsigned long ulLine, const char *const pcFileName)
 	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
+
+void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
+{
+/* These are volatile to try and prevent the compiler/linker optimising them
+away as the variables never actually get used.  If the debugger won't show the
+values of the variables, make them global my moving their declaration outside
+of this function. */
+volatile uint32_t r0;
+volatile uint32_t r1;
+volatile uint32_t r2;
+volatile uint32_t r3;
+volatile uint32_t r12;
+volatile uint32_t lr; /* Link register. */
+volatile uint32_t pc; /* Program counter. */
+volatile uint32_t psr;/* Program status register. */
+
+    r0 = pulFaultStackAddress[ 0 ];
+    r1 = pulFaultStackAddress[ 1 ];
+    r2 = pulFaultStackAddress[ 2 ];
+    r3 = pulFaultStackAddress[ 3 ];
+
+    r12 = pulFaultStackAddress[ 4 ];
+    lr = pulFaultStackAddress[ 5 ];
+    pc = pulFaultStackAddress[ 6 ];
+    psr = pulFaultStackAddress[ 7 ];
+
+    (void) r0;
+    (void) r1;
+    (void) r2;
+    (void) r3;
+    (void) r12;
+    (void) lr;
+    (void) pc;
+    (void) psr;
+
+    /* When the following line is hit, the variables contain the register values. */
+    for( ;; );
+}
+

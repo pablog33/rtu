@@ -1,82 +1,193 @@
+#include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
 
-/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-
-/* SM13 includes */
-#include "mot_pap.h"
-#include "rtu_com_hmi.h"
+#include "pole.h"
+#include "ad2s1210.h"
+#include "board.h"
+#include "pid.h"
+#include "dout.h"
 #include "debug.h"
+#include "tmr.h"
 
 #define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
+#define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES )
 
-struct mot_pap pole;
-static void pole_supervisor_task();
-static uint16_t cw, ccw;
+QueueHandle_t pole_queue = NULL;
 
-static void pole_task(void* par)
+SemaphoreHandle_t pole_supervisor_semaphore;
+
+static struct mot_pap pole;
+static struct ad2s1210 rdc;
+static struct pid pid;
+
+/**
+ * @brief 	handles the Pole movement.
+ * @param 	par		: unused
+ * @return	never
+ * @note	Receives commands from pole_queue
+ */
+static void pole_task(void *par)
 {
 	struct mot_pap_msg *msg_rcv;
 
-	while (1) {
-		if (xQueueReceive(pole_queue, &msg_rcv, portMAX_DELAY) == pdPASS)
-		{
-			lDebug(Debug, "pole: command received");
+	while (true) {
+		if (xQueueReceive(pole_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
+			lDebug(Info, "pole: command received");
 
-			switch (msg_rcv->type)
-			{
+			mot_pap_init_limits(&pole);
+
+			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
-				lDebug(Debug, "Pole free_run_direction: %d", msg_rcv->free_run_direction);
-				if (msg_rcv->free_run_direction) { lDebug(Info, "Giro Anti-horario"); ccw = true; }
-				else { lDebug(Info, "Giro Horario"); cw = true; }
-				lDebug(Info, "Pole free_run_speed: %d",msg_rcv->free_run_speed);
+				mot_pap_move_free_run(&pole, msg_rcv->free_run_direction,
+						msg_rcv->free_run_speed);
 				break;
 
-			case MOT_PAP_TYPE_CLOSED_LOOP:	//PID
-				lDebug(Info,"Pole closed_loop_setpoint: %x",msg_rcv->closed_loop_setpoint);
+			case MOT_PAP_TYPE_CLOSED_LOOP:
+				mot_pap_move_closed_loop(&pole, msg_rcv->closed_loop_setpoint);
 				break;
 
 			default:
-				cw = false;
-				ccw = false;
-				lDebug(Info, "STOP POLE");
+				mot_pap_stop(&pole);
 				break;
 			}
 
 			vPortFree(msg_rcv);
-
 		}
 	}
-
 }
 
-void pole_supervisor_task()
-{	
-
-	pole.dir = MOT_PAP_TYPE_STOP;
-	pole.posCmd = 0xFFEE;
-	pole.posAct = 0xFFEE;
-	pole.freq = 5;
-
+/**
+ * @brief	checks if soft limits are reached, if stalled and if position reached in closed loop.
+ * @param 	par	: unused
+ * @return	never
+ */
+static void supervisor_task(void *par)
+{
+	while (true) {
+		xSemaphoreTake(pole_supervisor_semaphore, portMAX_DELAY);
+		mot_pap_supervise(&pole);
+	}
 }
 
-
+/**
+ * @brief 	creates the queues, semaphores and endless tasks to handle pole movements.
+ * @return	nothing
+ */
 void pole_init()
 {
 	pole_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
-	//xTaskCreate(pole_task, "Pole", configMINIMAL_STACK_SIZE, NULL, POLE_TASK_PRIORITY, NULL);
-	xTaskCreate(pole_task, "Pole", configMINIMAL_STACK_SIZE*2, NULL, 4, NULL);
-	lDebug(Debug, "pole.c", "pole_task - TaskCreate"); //Pablo Priority Debug: Borrar
+
+	pole.name = "pole";
+	pole.type = MOT_PAP_TYPE_STOP;
+	pole.cwLimit = 65535;
+	pole.ccwLimit = 0;
+	pole.last_dir = MOT_PAP_DIRECTION_CW;
+	pole.half_pulses = 0;
+	pole.offset = 0;
+
+	rdc.gpios.reset = &poncho_rdc_reset;
+	rdc.gpios.sample = &poncho_rdc_sample;
+	rdc.gpios.wr_fsync = &poncho_rdc_pole_wr_fsync;
+	rdc.resolution = 16;
+	ad2s1210_init(&rdc);
+
+	pole.rdc = &rdc;
+
+	pid_controller_init(&pid, 10, 20, 20, 20, 100);
+
+	pole.pid = &pid;
+
+	pole.gpios.direction = &dout_pole_dir;
+	pole.gpios.pulse = &dout_pole_pulse;
+
+	pole.tmr.started = false;
+	pole.tmr.lpc_timer = LPC_TIMER0;
+	pole.tmr.rgu_timer_rst = RGU_TIMER0_RST;
+	pole.tmr.clk_mx_timer = CLK_MX_TIMER0;
+	pole.tmr.timer_IRQn = TIMER0_IRQn;
+
+	tmr_init(&pole.tmr);
+
+	pole_supervisor_semaphore = xSemaphoreCreateBinary();
+	pole.supervisor_semaphore = pole_supervisor_semaphore;
+
+	if (pole_supervisor_semaphore != NULL) {
+		// Create the 'handler' task, which is the task to which interrupt processing is deferred
+		xTaskCreate(supervisor_task, "PoleSupervisor",
+		2048,
+		NULL, 10, NULL);
+		lDebug(Info, "pole: supervisor task created");
+	}
+
+	xTaskCreate(pole_task, "Pole", 512, NULL,
+	POLE_TASK_PRIORITY, NULL);
+
+	lDebug(Info, "pole: task created");
 }
 
-struct mot_pap *pole_get_status(void)
+/**
+ * @brief	handle interrupt from 32-bit timer to generate pulses for the stepper motor drivers
+ * @return	nothing
+ * @note 	calls the supervisor task every x number of generated steps
+ */
+void TIMER0_IRQHandler(void)
 {
-	pole_supervisor_task();
-	return &pole;
+	if (tmr_match_pending(&(pole.tmr))) {
+		mot_pap_isr(&pole);
+	}
 }
+
+/**
+ * @brief	gets pole RDC position
+ * @return	RDC position
+ */
+uint16_t pole_get_RDC_position()
+{
+	return ad2s1210_read_position(pole.rdc);
+}
+
+
+/**
+ * @brief	sets pole offset
+ * @param 	offset		: RDC position for 0 degrees
+ * @return	nothing
+ */
+void pole_set_offset(uint16_t offset)
+{
+	pole.offset = offset;
+}
+
+/**
+ * @brief	sets pole CW limit
+ * @param 	pos		: RDC position where the limit is reached
+ * @return	nothing
+ */
+void pole_set_cwLimit(uint16_t pos)
+{
+	pole.cwLimit = pos;
+}
+
+/**
+ * @brief	sets pole CCW limit
+ * @param 	pos		: RDC position where the limit is reached
+ * @return	nothing
+ */
+void pole_set_ccwLimit(uint16_t pos)
+{
+	pole.ccwLimit = pos;
+}
+
+/**
+ * @brief	returns status of the pole task.
+ * @return 	copy of status structure of the task
+ */
+struct mot_pap *pole_get_status(void) /* GPa 201207 retorna (*) */
+{
+	return &pole; /* GPa 201207 retorna (&) */
+}
+

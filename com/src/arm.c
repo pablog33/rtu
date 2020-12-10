@@ -19,6 +19,7 @@
 struct mot_pap arm;
 static void arm_supervisor_task();
 
+QueueHandle_t arm_queue = NULL;
 
 static void arm_task(void* par)
 {

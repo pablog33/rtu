@@ -1,8 +1,7 @@
-
 #include <stdbool.h>
 
-#include "dout.h"
 #include "board.h"
+#include "mot_pap.h"
 
 /**
  * @brief 	initializes DOUTs
@@ -21,20 +20,54 @@ void dout_init()
 
 	Chip_SCU_PinMuxSet( 1, 5, SCU_MODE_FUNC0 );			//DOUT7 P1_5 	PIN48 	GPIO1[8]   	POLE_PULSE
 	Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT, 1, 8);
-
-	dout_init_cero();
-
-	return;
-
 }
 
-void dout_init_cero()
+/**
+ * @brief	sets GPIO corresponding to DOUT4 where ARM_DIR is connected
+ * @param 	dir		: direction of movement. Should be:
+ * 					  MOT_PAP_DIRECTION_CW
+ * 					  MOT_PAP_DIRECTION_CCW
+ * @return	nothing
+ */
+void dout_arm_dir(enum mot_pap_direction dir)
 {
-	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12);
-	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12);
-	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12);
-	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12);
-
-	return;
+	if (dir == MOT_PAP_DIRECTION_CW) {
+		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 12);
+	} else {
+		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12);
+	}
 }
 
+/**
+ * @brief	toggles GPIO corresponding to DOUT5 where ARM_PULSE is connected
+ * @return 	nothing
+ */
+void dout_arm_pulse(void)
+{
+	Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, 5, 13);
+}
+
+/**
+ * @brief	sets GPIO corresponding to DOUT6 where POLE_DIR is connected
+ * @param 	dir		: direction of movement. Should be:
+ * 					  MOT_PAP_DIRECTION_CW
+ * 					  MOT_PAP_DIRECTION_CCW
+ * @return 	nothing
+ */
+void dout_pole_dir(enum mot_pap_direction dir)
+{
+	if (dir == MOT_PAP_DIRECTION_CW) {
+		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 14);
+	} else {
+		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 14);
+	}
+}
+
+/**
+ * @brief	toggles GPIO corresponding to DOUT7 where POLE_PULSE is connected
+ * @return 	nothing
+ */
+void dout_pole_pulse(void)
+{
+	Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, 1, 8);
+}

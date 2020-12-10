@@ -41,6 +41,8 @@
 
 #include "lpc_18xx43xx_emac_config.h"
 #include "arch/lpc18xx_43xx_emac.h"
+#include "arch/lpc_arch.h"
+#include "arch/sys_arch.h"
 
 #include "chip.h"
 #include "board.h"
