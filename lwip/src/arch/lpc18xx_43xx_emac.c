@@ -39,7 +39,6 @@
 #include "netif/etharp.h"
 #include "netif/ppp_oe.h"
 
-#include "lpc_18xx43xx_emac_config.h"
 #include "arch/lpc18xx_43xx_emac.h"
 #include "arch/lpc_arch.h"
 #include "arch/sys_arch.h"
@@ -49,6 +48,7 @@
 #include "lpc_phy.h"
 
 #include <string.h>
+#include "../../../nfc/inc/lpc_18xx43xx_emac_config.h"
 
 extern void msDelay(uint32_t ms);
 

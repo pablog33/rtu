@@ -1,12 +1,12 @@
+#include "rtu_com_hmi.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "rtu_com_hmi.h"
-#include "mot_pap.h"
-#include "lift.h"
-#include "debug.h"
-
 #include "lwip/opt.h"
+#include "debug.h"
+#include "lift.h"
+#include "mot_pap.h"
 
 #if LWIP_NETCONN
 

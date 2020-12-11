@@ -19,11 +19,11 @@
 #include "board.h"
 
 #include "debug.h"
-#include "pole.h"
-#include "lift.h"
 #include "dout.h"
-#include "relay.h"
+#include "lift.h"
+#include "pole.h"
 #include "poncho_rdc.h"
+#include "relay.h"
 #include "rtu_com_hmi.h"
 
 #ifdef TEST_GUI

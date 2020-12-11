@@ -1,13 +1,15 @@
+#include "ad2s1210.h"
+
 #include <stdio.h>
 #include <stdint.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "ad2s1210.h"
 #include "board.h"
-#include "spi.h"
+
 #include "debug.h"
+#include "spi.h"
 
 static const uint32_t ad2s1210_resolution_value[] = { 10, 12, 14, 16 };
 

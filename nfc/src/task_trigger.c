@@ -18,13 +18,11 @@
 #include "queue.h"
 
 /*	RTUcomHMI	*/
-#include "rtu_com_hmi.h"
 #include "bitops.h"
 #include "debug.h"
-
-/*	Motor Control	*/
-#include "mot_pap.h"
 #include "lift.h"
+#include "mot_pap.h"
+#include "rtu_com_hmi.h"
 
 
 void TaskTriggerMsg(HMICmd_t* pHMICmd)

@@ -1,3 +1,5 @@
+#include "pole.h"
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,12 +8,12 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-#include "pole.h"
-#include "ad2s1210.h"
 #include "board.h"
-#include "pid.h"
-#include "dout.h"
+
+#include "ad2s1210.h"
 #include "debug.h"
+#include "dout.h"
+#include "pid.h"
 #include "tmr.h"
 
 #define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )

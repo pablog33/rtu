@@ -1,7 +1,9 @@
+#include "relay.h"
+
 #include <stdbool.h>
 
-#include "relay.h"
 #include "board.h"
+
 #include "lift.h"
 
 /**

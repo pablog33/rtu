@@ -35,7 +35,7 @@
 #include "lwip/opt.h"
 
 #if NO_SYS == 0
-#include "FreeRTOSConfig.h"
+#include "../../../nfc/inc/FreeRTOSConfig.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"

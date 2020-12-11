@@ -4,9 +4,10 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "board.h"
+
+#include "debug.h"
 #include "dout.h"
 #include "mot_pap.h"
-#include "debug.h"
 #include "pole.h"
 
 #define TMR_INTERRUPT_PRIORITY 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )

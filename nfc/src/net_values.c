@@ -15,16 +15,14 @@
 
 
 /*	RTUcomHMI	*/
-#include "rtu_com_hmi.h"
-#include "debug.h"
-
-/* LWIP includes */
 #include "lwip/err.h"
 
 /*	Motor Control	*/
-#include "mot_pap.h"
+#include "debug.h"
 #include "lift.h"
+#include "mot_pap.h"
 #include "pole.h"
+#include "rtu_com_hmi.h"
 
 static uint16_t prvFormatoTramaRecv(uint16_t uiLenDataRecv);
 

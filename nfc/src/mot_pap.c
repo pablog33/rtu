@@ -1,3 +1,5 @@
+#include "mot_pap.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -5,12 +7,12 @@
 #include "board.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mot_pap.h"
-#include "pid.h"
+
 #include "ad2s1210.h"
 #include "debug.h"
-#include "tmr.h"
+#include "pid.h"
 #include "relay.h"
+#include "tmr.h"
 
 extern bool stall_detection;
 

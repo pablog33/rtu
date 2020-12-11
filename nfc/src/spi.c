@@ -1,10 +1,11 @@
+#include "spi.h"
+
 #include <stdint.h>
 #include <stdbool.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "spi.h"
 #include "board.h"
 
 #define LPC_SSP           					LPC_SSP1

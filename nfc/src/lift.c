@@ -1,3 +1,5 @@
+#include "lift.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -6,10 +8,9 @@
 #include "timers.h"
 #include "queue.h"
 #include "semphr.h"
-#include "lift.h"
-#include "relay.h"
-#include "debug.h"
 #include "board.h"
+#include "debug.h"
+#include "relay.h"
 
 #define LIFT_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 

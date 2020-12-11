@@ -10,9 +10,9 @@
 #include "semphr.h"
 
 /* SM13 includes */
+#include "debug.h"
 #include "mot_pap.h"
 #include "rtu_com_hmi.h"
-#include "debug.h"
 
 #define arm_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 
