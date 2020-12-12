@@ -22,6 +22,7 @@
 #include "dout.h"
 #include "lift.h"
 #include "pole.h"
+//#include "arm.h"
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"
@@ -70,7 +71,7 @@ static void prvSetupHardware(void)
 #endif
 
     pole_init();
-//	arm_init();
+	arm_init();
 	lift_init();
 
 #ifdef TEST_GUI

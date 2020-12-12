@@ -64,12 +64,16 @@ static void arm_supervisor_task()
 }
 
 
+void armsupervisor_task(void)
+{}
+
 void arm_init()
 {
 	
 	arm_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
 	//xTaskCreate(arm_task, "arm", configMINIMAL_STACK_SIZE, NULL, arm_TASK_PRIORITY, NULL);
-	xTaskCreate(arm_task, "arm", configMINIMAL_STACK_SIZE*2, NULL, 4, NULL);
+	xTaskCreate(arm_task, "arm", 512, NULL, 4, NULL);
+	xTaskCreate(armsupervisor_task, "Arm_Supervisor", 2048, NULL, 10, NULL);
 	lDebug(Debug, "arm.c", "arm_task - TaskCreate"); //Pablo Priority Debug: Borrar
 }
 

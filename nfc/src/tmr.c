@@ -9,11 +9,12 @@
 #include "dout.h"
 #include "mot_pap.h"
 #include "pole.h"
+//#include "arm.h"
 
 #define TMR_INTERRUPT_PRIORITY 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
 
 /**
- * @brief	enables timer 0 clock and resets it
+ * @brief	enables timer 0(Pole)/1(Arm) clock and resets it
  * @return	nothing
  */
 void tmr_init(struct tmr *me)
@@ -30,18 +31,19 @@ void tmr_init(struct tmr *me)
 }
 
 /**
- * @brief	sets TIMER0 frequency
+ * @brief	sets TIMER 0(Pole)/1(Arm) frequency
  * @param 	me				: pointer to tmr structure
  * @param 	tick_rate_hz 	: desired frequency
  * @return	0 on success
  * @return	-1 if tick_rate_hz > 300000
+ *
  */
 int32_t tmr_set_freq(struct tmr *me, uint32_t tick_rate_hz)
 {
 	uint32_t timerFreq;
 
 	if ((tick_rate_hz < 0) || (tick_rate_hz > MOT_PAP_COMPUMOTOR_MAX_FREQ)) {
-		lDebug(Error, "pole: invalid freq");
+		lDebug(Error, "Timer %d: invalid freq", me->lpc_timer);
 		return -1;
 	}
 

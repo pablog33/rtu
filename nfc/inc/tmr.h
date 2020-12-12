@@ -1,5 +1,5 @@
-#ifndef POLE_TMR_H_
-#define POLE_TMR_H_
+#ifndef TMR_H_
+#define TMR_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -35,4 +35,4 @@ bool tmr_match_pending(struct tmr *me);
 }
 #endif
 
-#endif /* POLE_TMR_H_ */
+#endif /* TMR_H_ */
