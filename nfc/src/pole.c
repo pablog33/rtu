@@ -68,7 +68,7 @@ static void pole_task(void *par)
  * @param 	par	: unused
  * @return	never
  */
-static void supervisor_task(void *par)
+static void pole_supervisor_task(void *par)
 {
 	while (true) {
 		xSemaphoreTake(pole_supervisor_semaphore, portMAX_DELAY);
@@ -120,9 +120,9 @@ void pole_init()
 
 	if (pole_supervisor_semaphore != NULL) {
 		// Create the 'handler' task, which is the task to which interrupt processing is deferred
-		xTaskCreate(supervisor_task, "PoleSupervisor",
+		xTaskCreate(pole_supervisor_task, "PoleSupervisor",
 		2048,
-		NULL, 10, NULL);
+		NULL, POLE_SUPERVISOR_TASK_PRIORITY, NULL);
 		lDebug(Info, "pole: supervisor task created");
 	}
 

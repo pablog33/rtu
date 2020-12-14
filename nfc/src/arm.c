@@ -68,7 +68,7 @@ static void arm_task(void *par)
  * @param 	par	: unused
  * @return	never
  */
-static void supervisor_task(void *par)
+static void arm_supervisor_task(void *par)
 {
 	while (true) {
 		xSemaphoreTake(arm_supervisor_semaphore, portMAX_DELAY);

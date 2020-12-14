@@ -62,7 +62,7 @@ int32_t tmr_set_freq(struct tmr *me, uint32_t tick_rate_hz)
  */
 void tmr_start(struct tmr *me)
 {
-	Chip_TIMER_Enable(LPC_TIMER0);
+	Chip_TIMER_Enable(me->lpc_timer);
 	NVIC_SetPriority(me->timer_IRQn, TMR_INTERRUPT_PRIORITY);
 	NVIC_EnableIRQ(me->timer_IRQn);
 	NVIC_ClearPendingIRQ(me->timer_IRQn);
@@ -103,9 +103,9 @@ uint32_t tmr_started(struct tmr *me)
  */
 bool tmr_match_pending(struct tmr *me)
 {
-	bool ret = Chip_TIMER_MatchPending(LPC_TIMER0, 1);
+	bool ret = Chip_TIMER_MatchPending(me->lpc_timer, 1);
 	if (ret) {
-		Chip_TIMER_ClearMatch(LPC_TIMER0, 1);
+		Chip_TIMER_ClearMatch(me->lpc_timer, 1);
 	}
 	return ret;
 }
