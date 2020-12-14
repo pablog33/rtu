@@ -22,7 +22,7 @@
 #include "dout.h"
 #include "lift.h"
 #include "pole.h"
-//#include "arm.h"
+#include "arm.h"
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"

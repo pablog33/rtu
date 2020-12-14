@@ -9,7 +9,7 @@
 #include "dout.h"
 #include "mot_pap.h"
 #include "pole.h"
-//#include "arm.h"
+#include "arm.h"
 
 #define TMR_INTERRUPT_PRIORITY 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
 

@@ -122,7 +122,7 @@ void arm_init()
 		// Create the 'handler' task, which is the task to which interrupt processing is deferred
 		xTaskCreate(arm_supervisor_task, "ArmSupervisor",
 		2048,
-		NULL, 10, NULL);
+		NULL, ARM_SUPERVISOR_TASK_PRIORITY, NULL);
 		lDebug(Info, "arm: supervisor task created");
 	}
 

@@ -22,7 +22,7 @@
 #include "lift.h"
 #include "mot_pap.h"
 #include "pole.h"
-//#include "arm.h"
+#include "arm.h"
 
 #include "rtu_com_hmi.h"
 

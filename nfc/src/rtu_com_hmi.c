@@ -160,10 +160,10 @@ static void prvEmergencyStop(void)
 	struct mot_pap_msg *pPoleMsg;
 	struct lift_msg  *pLiftMsg;
 
-//	pArmMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
-//	pArmMsg->type = MOT_PAP_TYPE_STOP;
-//	if (xQueueSend(arm_queue, &pArmMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, " Comando enviado a arm.c exitoso!"); }
-//				else { lDebug(Error, "Comando NO PUDO ser enviado a arm.c"); }
+	pArmMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
+	pArmMsg->type = MOT_PAP_TYPE_STOP;
+	if (xQueueSend(arm_queue, &pArmMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, " Comando enviado a arm.c exitoso!"); }
+				else { lDebug(Error, "Comando NO PUDO ser enviado a arm.c"); }
 
 	pPoleMsg = (struct mot_pap_msg *)pvPortMalloc(sizeof(struct mot_pap_msg));
 	pPoleMsg->type = MOT_PAP_TYPE_STOP;
