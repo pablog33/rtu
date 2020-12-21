@@ -46,6 +46,7 @@ void TaskTriggerMsg(HMICmd_t* pHMICmd)
 	struct mot_pap_msg *pPoleMsg;
 	struct lift_msg *pLiftMsg;
 
+	stall_detection = pHMICmd->stallEn;
 	
 	/*	-- ucActualFlagByte -- Se consituye un byte donde 3 de sus bits -b0 a b2- representan 
 		b0b1: mode. 00: STOP, 01: FREE RUN, 10: AUTO, 11: LIFT

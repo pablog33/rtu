@@ -14,10 +14,6 @@
 #include "relay.h"
 #include "tmr.h"
 
-extern bool stall_detection;
-
-
-
 // Freqs expressed in Khz
 static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75, 100, 125 };
 

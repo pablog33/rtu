@@ -17,8 +17,6 @@
 static void prvEmergencyStop(void);
 static void prvNetconnError(err_t err);
 
-bool stall_detection = true;
-
 /*-----------------------------------------------------------------------------------*/
 static void 
 tcp_thread(void *arg)
@@ -52,10 +50,6 @@ tcp_thread(void *arg)
 			uint32_t cycleCount = 0;
 
 			newconn->recv_timeout = RCV_TIMEO;
-
-//			arm_init();
-//			pole_init();
-//			lift_init();
 
 			while ((err_recv = netconn_recv(newconn, &buf)) == ERR_OK)
 			{
