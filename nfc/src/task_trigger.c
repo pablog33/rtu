@@ -23,6 +23,7 @@
 #include "lift.h"
 #include "mot_pap.h"
 #include "rtu_com_hmi.h"
+#include "relay.h"
 
 
 void TaskTriggerMsg(HMICmd_t* pHMICmd)
@@ -156,10 +157,11 @@ void TaskTriggerMsg(HMICmd_t* pHMICmd)
 				bSendToArm = TRUE;
 				bSendToPole = TRUE;
 				bSendToLift = TRUE;
+				relay_main_pwr(false);
 				lDebug(Info, " CONTROL DISABLE! STOP ALL!");
 				configASSERT(pHMICmd->ctrlEn == eDesable); /* Deber�a corresponder al HMICmd.CtrlEn = eDesable */
 			}
-			else { lDebug(Info, " Se activa el control -CONTROL ENABLE-!"); }
+			else { lDebug(Info, " Se activa el control -CONTROL ENABLE-!"); relay_main_pwr(true); }
 		}
 		
 		if(bSendToArm)

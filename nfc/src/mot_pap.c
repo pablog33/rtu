@@ -210,7 +210,8 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
 		me->type = MOT_PAP_TYPE_FREE_RUNNING;
 		me->dir = direction;
 		me->gpios.direction(me->dir);
-		me->freq = mot_pap_free_run_freqs[speed] * 1000;
+//		me->freq = mot_pap_free_run_freqs[speed] * 1000;
+		me->freq = mot_pap_free_run_freqs[speed] / 10; /* GPa 201221 Restituir */
 		tmr_set_freq(&(me->tmr), me->freq);
 		tmr_start(&(me->tmr));
 		lDebug(Info, "%s: FREE RUN, speed: %u, direction: %s", me->name,
