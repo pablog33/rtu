@@ -25,6 +25,7 @@
 #include "rtu_com_hmi.h"
 #include "relay.h"
 
+bool stall_detection;
 
 void TaskTriggerMsg(HMICmd_t* pHMICmd)
 {

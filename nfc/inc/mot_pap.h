@@ -97,7 +97,7 @@ extern QueueHandle_t lift_queue;
 extern QueueHandle_t pole_queue;
 extern QueueHandle_t arm_queue;
 
-bool stall_detection;
+extern bool stall_detection;
 
 #ifdef __cplusplus
 }
