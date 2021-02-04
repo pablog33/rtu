@@ -3,17 +3,6 @@
 
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef TEST_GUI
-//IRQHandler for ZS1_LIFT
-void GPIO0_IRQHandler(void);
-//IRQHandler for ZS1_LIFT
-void GPIO1_IRQHandler(void);
-#endif
-
 #define LIFT_DIRECTION_CHANGE_DELAY_MS	500
 
 enum lift_direction {
