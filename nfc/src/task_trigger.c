@@ -30,6 +30,7 @@ bool stall_detection;
 void TaskTriggerMsg(HMICmd_t* pHMICmd)
 {
 	static unsigned char ucPreviousFlagByte;
+	static bool bStallPreviousFlag;
 	unsigned char ucActualFlagByte, ucEventFlagByte, ucMode_ActualBits, ucMode_EventBits;
 	bool bSendToArm, bSendToPole, bSendToLift, bControlEnable_EventBit,bTypeStop, bTypeFreeRunStart,
 	bTypeAutoStart, bTypeLiftUp, bTypeLiftDown;
@@ -49,6 +50,8 @@ void TaskTriggerMsg(HMICmd_t* pHMICmd)
 	struct lift_msg *pLiftMsg;
 
 	stall_detection = pHMICmd->stallEn;
+	if (stall_detection ^ bStallPreviousFlag) { if(stall_detection) { lDebug(Info, "Stall ENABLED" ); } else { lDebug(Info, "Stall DESABLED" );}}
+	bStallPreviousFlag = stall_detection;
 	
 	/*	-- ucActualFlagByte -- Se consituye un byte donde 3 de sus bits -b0 a b2- representan 
 		b0b1: mode. 00: STOP, 01: FREE RUN, 10: AUTO, 11: LIFT

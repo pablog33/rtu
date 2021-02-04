@@ -27,27 +27,6 @@
 #include "relay.h"
 #include "rtu_com_hmi.h"
 
-#ifdef TEST_GUI
-#include <execinfo.h>
-#include <unistd.h>
-#include "gui.h"
-#endif
-
-#ifdef TEST_GUI
-void handler(int sig) {
-  void *array[10];
-  size_t size;
-
-  // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
-
-  // print out all the frames to stderr
-  fprintf(stderr, "Error: signal %d:\n", sig);
-  backtrace_symbols_fd(array, size, STDERR_FILENO);
-  exit(1);
-}
-#endif
-
 /* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
 uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; 
 
@@ -66,17 +45,9 @@ static void prvSetupHardware(void)
 	relay_init();
 	poncho_rdc_init();
 
-#ifdef TEST_GUI
-    signal(SIGSEGV, handler);   // install our handler
-#endif
-
     pole_init();
 	arm_init();
 	lift_init();
-
-#ifdef TEST_GUI
-	gui_init();
-#endif
 			  
 	/* Initial LED DOUT4 state is off to show an unconnected cable state */
 	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 12); /* LOW */
