@@ -65,6 +65,12 @@ void TaskTriggerMsg(HMICmd_t* pHMICmd)
 	else { lDebug(Info, "Info - prvTrigger: pHMICmd->mode"); }
 	/*	-- ctrlEn --	*/
 	if (pHMICmd->ctrlEn == eEnable) { BitSet(ucActualFlagByte, bit2);  }
+	/* -- ArmPoleDir -- */
+	if (pHMICmd->freeRunDir == eCCW) { BitSet(ucActualFlagByte, bit3);  }
+	/* -- LiftDir -- */
+	if (pHMICmd->liftDir == eUp) { BitSet(ucActualFlagByte, bit4);  }
+	/* -- Axis -- */
+	if (pHMICmd->freeRunAxis == ePole ) { BitSet(ucActualFlagByte, bit5);  }
 
 	ucEventFlagByte = ucActualFlagByte ^ ucPreviousFlagByte;
 
