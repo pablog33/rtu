@@ -363,8 +363,6 @@ int32_t ad2s1210_init(struct ad2s1210 *me)
 		return -1;
 	}
 
-	spi_init();
-
 	data = AD2S1210_DEF_CONTROL & ~(AD2S1210_RESOLUTION_MASK);
 	data |= (me->resolution - 10) >> 1;
 	ret = ad2s1210_set_control(me, data);

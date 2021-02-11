@@ -103,6 +103,8 @@ void pole_init()
 	rdc.gpios.sample = &poncho_rdc_sample;
 	rdc.gpios.wr_fsync = &poncho_rdc_pole_wr_fsync;
 	rdc.resolution = 16;
+	rdc.fclkin = 8192000;
+	rdc.fexcit = 2000;
 	ad2s1210_init(&rdc);
 
 	pole.rdc = &rdc;

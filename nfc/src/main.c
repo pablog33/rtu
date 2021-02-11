@@ -45,7 +45,10 @@ static void prvSetupHardware(void)
 	relay_init();
 	poncho_rdc_init();
 
-    pole_init();
+	spi_init();
+
+    //pole_init();
+	spi_test_init();
 	arm_init();
 	lift_init();
 			  
