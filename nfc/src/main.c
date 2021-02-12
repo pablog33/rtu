@@ -26,6 +26,8 @@
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"
+#include "spi.h"
+#include "spi_test.h"
 
 /* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
 uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; 
@@ -47,9 +49,9 @@ static void prvSetupHardware(void)
 
 	spi_init();
 
-    //pole_init();
+//    pole_init();
 	spi_test_init();
-	arm_init();
+//	arm_init();
 	lift_init();
 			  
 	/* Initial LED DOUT4 state is off to show an unconnected cable state */

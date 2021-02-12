@@ -19,8 +19,14 @@ static struct ad2s1210 rdc;
 static void spi_test_task(void *par)
 {
 	while (true) {
+//		ad2s1210_hard_reset(&rdc);
+//		ad2s1210_soft_reset(&rdc);
 
-		ad2s1210_read_position(&rdc);
+		//ad2s1210_read_position(&rdc);
+//		ad2s1210_get_reg(&rdc, AD2S1210_REG_EXCIT_FREQ);
+		ad2s1210_print_fault_register(&rdc);
+		ad2s1210_clear_fault_register(&rdc);
+		vTaskDelay(pdMS_TO_TICKS(2000));
 	}
 }
 
