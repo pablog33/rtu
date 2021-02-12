@@ -20,7 +20,6 @@ static struct ad2s1210 rdc_arm;
 static void spi_test_task(void *par)
 {
 	while (true) {
-//		ad2s1210_hard_reset(&rdc);
 //		ad2s1210_soft_reset(&rdc);
 
 		//ad2s1210_read_position(&rdc);
@@ -39,6 +38,7 @@ void spi_test_init()
 	rdc_pole.resolution = 16;
 	rdc_pole.fclkin = 8192000;
 	rdc_pole.fexcit = 2000;
+	ad2s1210_hard_reset(&rdc_pole);
 	ad2s1210_init(&rdc_pole);
 
 	rdc_arm.gpios.reset = &poncho_rdc_reset;
@@ -47,9 +47,8 @@ void spi_test_init()
 	rdc_arm.resolution = 16;
 	rdc_arm.fclkin = 8192000;
 	rdc_arm.fexcit = 2000;
+	ad2s1210_hard_reset(&rdc_arm);
 	ad2s1210_init(&rdc_arm);
-
-
 
 	xTaskCreate(spi_test_task, "SPI_Test", 512, NULL,
 	6, NULL);

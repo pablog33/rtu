@@ -45,8 +45,7 @@ static uint8_t ad2s1210_config_read(struct ad2s1210 *me, uint8_t address)
 	Chip_SSP_DATA_SETUP_T xfers[xfers_count];
 
 	tx[0] = address | AD2S1210_ADDRESS_MASK;
-	tx[1] = address | AD2S1210_ADDRESS_MASK;	// Read some extra record to receive the data
-//	tx[1] = AD2S1210_REG_FAULT;	// Read some extra record to receive the data
+	tx[1] = AD2S1210_REG_FAULT;				// Read some extra record to receive the data
 
 	for (int i = 0; i < xfers_count; i++) {
 		/* @formatter:off */
@@ -154,7 +153,7 @@ int32_t ad2s1210_soft_reset(struct ad2s1210 *me)
 void ad2s1210_hard_reset(struct ad2s1210 *me)
 {
 	me->gpios.reset(0);
-	vTaskDelay(pdMS_TO_TICKS(1));
+	udelay(100);
 	me->gpios.reset(1);
 }
 
