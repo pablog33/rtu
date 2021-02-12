@@ -21,7 +21,7 @@ int32_t spi_sync_transfer(Chip_SSP_DATA_SETUP_T *xfers, uint32_t num_xfers,
  * @return	0 on success
  * @note 	This function writes the buffer buf.
  */
-static inline int spi_write(void *buf, size_t len)
+static inline int spi_write(void *buf, size_t len, void (*gpio_wr_fsync)(bool))
 {
 
 	/* @formatter:off */
@@ -31,8 +31,9 @@ static inline int spi_write(void *buf, size_t len)
 	};
 	/* @formatter:on */
 
-	return spi_sync_transfer(&t, 1, NULL);
+	return spi_sync_transfer(&t, 1, gpio_wr_fsync);
 }
+
 
 /**
  * @brief 	SPI synchronous read
@@ -41,7 +42,7 @@ static inline int spi_write(void *buf, size_t len)
  * @return 	0 on success
  * @note 	This function reads from SPI to the buffer buf.
  */
-static inline int spi_read(void *buf, size_t len)
+static inline int spi_read(void *buf, size_t len, void (*gpio_wr_fsync)(bool))
 {
 	/* @formatter:off */
 	Chip_SSP_DATA_SETUP_T t = {
@@ -50,7 +51,7 @@ static inline int spi_read(void *buf, size_t len)
 	};
 	/* @formatter:on */
 
-	return spi_sync_transfer(&t, 1, NULL);
+	return spi_sync_transfer(&t, 1, gpio_wr_fsync);
 }
 
 #ifdef __cplusplus
