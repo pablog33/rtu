@@ -14,7 +14,8 @@
 #include "pid.h"
 #include "tmr.h"
 
-static struct ad2s1210 rdc;
+static struct ad2s1210 rdc_pole;
+static struct ad2s1210 rdc_arm;
 
 static void spi_test_task(void *par)
 {
@@ -24,24 +25,35 @@ static void spi_test_task(void *par)
 
 		//ad2s1210_read_position(&rdc);
 //		ad2s1210_get_reg(&rdc, AD2S1210_REG_EXCIT_FREQ);
-		ad2s1210_print_fault_register(&rdc);
-		ad2s1210_clear_fault_register(&rdc);
+		ad2s1210_print_fault_register(&rdc_pole);
+		ad2s1210_clear_fault_register(&rdc_pole);
 		vTaskDelay(pdMS_TO_TICKS(2000));
 	}
 }
 
 void spi_test_init()
 {
-	rdc.gpios.reset = &poncho_rdc_reset;
-	rdc.gpios.sample = &poncho_rdc_sample;
-	rdc.gpios.wr_fsync = &poncho_rdc_pole_wr_fsync;
-	rdc.resolution = 16;
-	rdc.fclkin = 8192000;
-	rdc.fexcit = 2000;
-	ad2s1210_init(&rdc);
+	rdc_pole.gpios.reset = &poncho_rdc_reset;
+	rdc_pole.gpios.sample = &poncho_rdc_sample;
+	rdc_pole.gpios.wr_fsync = &poncho_rdc_pole_wr_fsync;
+	rdc_pole.resolution = 16;
+	rdc_pole.fclkin = 8192000;
+	rdc_pole.fexcit = 2000;
+	ad2s1210_init(&rdc_pole);
+
+	rdc_arm.gpios.reset = &poncho_rdc_reset;
+	rdc_arm.gpios.sample = &poncho_rdc_sample;
+	rdc_arm.gpios.wr_fsync = &poncho_rdc_arm_wr_fsync;
+	rdc_arm.resolution = 16;
+	rdc_arm.fclkin = 8192000;
+	rdc_arm.fexcit = 2000;
+	ad2s1210_init(&rdc_arm);
+
+
 
 	xTaskCreate(spi_test_task, "SPI_Test", 512, NULL,
 	6, NULL);
 
 	lDebug(Info, "SPI_TEST task created");
 }
+

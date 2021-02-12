@@ -33,7 +33,6 @@ int32_t spi_sync_transfer(Chip_SSP_DATA_SETUP_T *xfers, uint32_t num_xfers,
 				if (gpio_wr_fsync != NULL) {
 					gpio_wr_fsync(0);
 				}
-				udelay(50);
 				Chip_SSP_RWFrames_Blocking(LPC_SSP, &(xfers[i]));
 				udelay(50);
 				if (gpio_wr_fsync != NULL) {
@@ -44,9 +43,8 @@ int32_t spi_sync_transfer(Chip_SSP_DATA_SETUP_T *xfers, uint32_t num_xfers,
 					/* Delay WR/FSYNC falling edge to SCLK rising edge 3 ns min
 					 Delay WR/FSYNC falling edge to SDO release from high-Z
 					 VDRIVE = 4.5 V to 5.25 V 16 ns min */
-					udelay(10);
+					//udelay(10);
 				}
-				udelay(50);
 			}
 			xSemaphoreGive(spi_mutex);
 		}
@@ -72,7 +70,7 @@ void spi_init(void)
 	Chip_SSP_SetFormat(LPC_SSP, ssp_format.bits, ssp_format.frameFormat,
 			ssp_format.clockMode);
 
-	Chip_SSP_SetBitRate(LPC_SSP, 100000);
+	Chip_SSP_SetBitRate(LPC_SSP, 1000000);
 
 	Chip_SSP_Enable(LPC_SSP);
 
