@@ -113,7 +113,7 @@ uint8_t ad2s1210_get_fault_register(struct ad2s1210 *me);
 
 void ad2s1210_print_fault_register(struct ad2s1210 *me);
 
-void ad2s1210_clear_fault_register(struct ad2s1210 *me);
+uint8_t ad2s1210_clear_fault_register(struct ad2s1210 *me);
 
 #ifdef __cplusplus
 }

@@ -45,8 +45,8 @@ static void prvSetupHardware(void)
 	relay_init();
 	poncho_rdc_init();
 
-    pole_init();
 	arm_init();
+    pole_init();
 	lift_init();
 			  
 	/* Initial LED DOUT4 state is off to show an unconnected cable state */

@@ -130,6 +130,10 @@ void mot_pap_supervise(struct mot_pap *me)
 
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
 
+	lDebug(Info, "***********");
+	lDebug(Info, "Pos Act Arm: %d", me->posAct);
+	lDebug(Info, "***********");
+
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
 

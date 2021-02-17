@@ -1,6 +1,7 @@
 #include <stdbool.h>
 
 #include "board.h"
+#include "spi.h"
 
 /**
  * @brief 	initializes GPIOs for Poncho RDC card
@@ -24,6 +25,8 @@ void poncho_rdc_init()
 	Chip_SCU_PinMuxSet( 6, 7, (SCU_MODE_PULLUP | SCU_MODE_FUNC4));			//GPIO3 P6_7	PIN85	GPIO5[15] WR/FSYNC (POLE)
 	Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT, 5, 15);
 	Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 15);
+
+	spi_init();
 }
 
 /**

@@ -101,6 +101,12 @@ void arm_init()
 	rdc.fexcit = 2000;
 	ad2s1210_init(&rdc);
 
+	ad2s1210_soft_reset(&rdc);
+
+	while (ad2s1210_clear_fault_register(&rdc)) {
+
+	}
+
 	arm.rdc = &rdc;
 
 	pid_controller_init(&pid, 10, 20, 20, 20, 100);

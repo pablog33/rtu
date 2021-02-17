@@ -16,6 +16,7 @@
 #include "dout.h"
 #include "pid.h"
 #include "tmr.h"
+#include "spi.h"
 
 #define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 #define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES )

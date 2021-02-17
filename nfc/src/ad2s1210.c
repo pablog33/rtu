@@ -472,17 +472,22 @@ void ad2s1210_print_fault_register(struct ad2s1210 *me)
  * @param 	me		: pointer to struct ad2s1210
  * @return 	nothing
  */
-void ad2s1210_clear_fault_register(struct ad2s1210 *me)
+uint8_t ad2s1210_clear_fault_register(struct ad2s1210 *me)
 {
 	me->gpios.sample(0);
 	/* delay (2 * tck + 20) nano seconds */
-//	udelay(1);
+	udelay(1);
 	me->gpios.sample(1);
+	udelay(1);
 
-	ad2s1210_config_read(me, AD2S1210_REG_FAULT);
+	uint8_t ret = 0;
 
+	ret = ad2s1210_config_read(me, AD2S1210_REG_FAULT);
+
+	udelay(1);
 	me->gpios.sample(0);
-//	udelay(1);
+	udelay(1);
 	me->gpios.sample(1);
+	return ret;
 }
 
