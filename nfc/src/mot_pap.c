@@ -130,10 +130,6 @@ void mot_pap_supervise(struct mot_pap *me)
 
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
 
-	lDebug(Info, "***********");
-	lDebug(Info, "Pos Act Arm: %d", me->posAct);
-	lDebug(Info, "***********");
-
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
 
@@ -214,8 +210,8 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
 		me->type = MOT_PAP_TYPE_FREE_RUNNING;
 		me->dir = direction;
 		me->gpios.direction(me->dir);
-		me->freq = mot_pap_free_run_freqs[speed] * 2000; /* GPa 210204 */
-//		me->freq = mot_pap_free_run_freqs[speed] / 10; /* GPa 201221 Restituir */
+		me->freq = mot_pap_free_run_freqs[speed] * 1000;
+
 		tmr_set_freq(&(me->tmr), me->freq);
 		tmr_start(&(me->tmr));
 		lDebug(Info, "%s: FREE RUN, speed: %u, direction: %s", me->name,

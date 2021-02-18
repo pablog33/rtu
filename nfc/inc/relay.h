@@ -17,6 +17,8 @@ void relay_lift_pwr(bool state);
 
 void relay_main_pwr(bool state);
 
+void relay_spare_led(bool state);
+
 #ifdef __cplusplus
 }
 #endif

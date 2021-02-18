@@ -50,7 +50,7 @@ static void prvSetupHardware(void)
 	lift_init();
 			  
 	/* Initial LED DOUT4 state is off to show an unconnected cable state */
-	Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4); /* LOW */
+	relay_spare_led(0); /* LOW */
 }
 
 /*****************************************************************************
