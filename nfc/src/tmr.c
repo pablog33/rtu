@@ -11,7 +11,7 @@
 #include "pole.h"
 #include "arm.h"
 
-#define TMR_INTERRUPT_PRIORITY 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
+#define TMR_INTERRUPT_PRIORITY 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 2 )
 
 /**
  * @brief	enables timer 0(Pole)/1(Arm) clock and resets it
@@ -50,6 +50,7 @@ int32_t tmr_set_freq(struct tmr *me, uint32_t tick_rate_hz)
 	/* Get timer 0 peripheral clock rate */
 	timerFreq = Chip_Clock_GetRate(me->clk_mx_timer);
 
+	tick_rate_hz = tick_rate_hz << 1;			//Double the frequency
 	/* Timer setup for match at tick_rate_hz */
 	Chip_TIMER_SetMatch(me->lpc_timer, 1, (timerFreq / tick_rate_hz));
 	return 0;
@@ -62,10 +63,10 @@ int32_t tmr_set_freq(struct tmr *me, uint32_t tick_rate_hz)
  */
 void tmr_start(struct tmr *me)
 {
+	NVIC_ClearPendingIRQ(me->timer_IRQn);
 	Chip_TIMER_Enable(me->lpc_timer);
 	NVIC_SetPriority(me->timer_IRQn, TMR_INTERRUPT_PRIORITY);
 	NVIC_EnableIRQ(me->timer_IRQn);
-	NVIC_ClearPendingIRQ(me->timer_IRQn);
 	me->started = true;
 }
 
@@ -79,6 +80,7 @@ void tmr_stop(struct tmr *me)
 	Chip_TIMER_Disable(me->lpc_timer);
 	NVIC_DisableIRQ(me->timer_IRQn);
 	NVIC_ClearPendingIRQ(me->timer_IRQn);
+	Chip_TIMER_Reset(me->lpc_timer);
 	me->started = false;
 }
 
