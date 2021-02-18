@@ -103,9 +103,6 @@ void arm_init()
 
 	ad2s1210_soft_reset(&rdc);
 
-	while (ad2s1210_clear_fault_register(&rdc)) {
-
-	}
 
 	arm.rdc = &rdc;
 
