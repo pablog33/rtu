@@ -21,7 +21,7 @@ extern "C" {
 #define MOT_PAP_DIRECTION_CHANGE_DELAY_MS		500
 
 #define MOT_PAP_SUPERVISOR_RATE    				2000	//2 means one step
-#define MOT_PAP_POS_THRESHOLD 					1
+#define MOT_PAP_POS_THRESHOLD 					1000
 #define MOT_PAP_STALL_THRESHOLD 				1
 
 enum mot_pap_direction {

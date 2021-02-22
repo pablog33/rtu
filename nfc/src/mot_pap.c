@@ -44,9 +44,7 @@ int32_t mot_pap_freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos)
 	int32_t freq;
 
 	cout = pid_controller_calculate(pid, (int32_t) setpoint, (int32_t) pos);
-	lDebug(Info, "----COUT---- %i", cout);
 	freq = (int32_t) abs((int) cout) * MOT_PAP_CLOSED_LOOP_FREQ_MULTIPLIER;
-	lDebug(Info, "----FREQ---- %u", freq);
 	if (freq > MOT_PAP_MAX_FREQ)
 		return MOT_PAP_MAX_FREQ;
 
@@ -233,7 +231,7 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
  */
 void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 {
-	int32_t error, threshold = 10;
+	int32_t error;
 	bool already_there;
 	enum mot_pap_direction dir;
 
@@ -246,7 +244,7 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 
 		//calcular error de posición
 		error = me->posCmd - me->posAct;
-		already_there = (abs(error) < threshold);
+		already_there = (abs(error) < MOT_PAP_POS_THRESHOLD);
 
 		if (already_there) {
 			tmr_stop(&(me->tmr));
