@@ -41,19 +41,19 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	pRTUDataTx->velActPole = pPoleStatus->freq;
 
 	/*	-- cwLimitArm --	*/
-	if (pArmStatus->cwLimit)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
+	if (pArmStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
 	else {	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_RUN;");	}
 
 	/*	-- ccwLimitArm --	*/
-	if (pArmStatus->ccwLimit)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
+	if (pArmStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
 	else {	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_RUN;");	}
 
 	/*	-- cwLimitPole --	*/
-	if (pPoleStatus->cwLimit)	{	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_LIM;");	}
+	if (pPoleStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_LIM;");	}
 	else {	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_RUN;");	}
 
 	/*	-- ccwLimitPole --	*/
-	if (pPoleStatus->ccwLimit)	{	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_LIM;");	}
+	if (pPoleStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_LIM;");	}
 	else {	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_RUN;");	}
 
 	/*	-- limitUp --	*/
