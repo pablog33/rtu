@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,12 +80,15 @@ static inline const char * levelText(enum debugLevels level) {
  * output. See the use in <tt>lDebug()</tt>.
  */
 extern enum debugLevels debugLevel;
+extern SemaphoreHandle_t uart_mutex;
 
 /**
  * The file where debug output is written. Defaults to <tt>stderr</tt>.
  * <tt>debugToFile()</tt> allows output to any file.
  */
 extern FILE* debugFile;
+
+void debugInit(void);
 
 void debugSetLevel(enum debugLevels lvl);
 
@@ -131,9 +135,16 @@ void debugClose(void);
  */
 #define lDebug(level, fmt, ...) \
 do { \
-       if (DEBUG_ENABLED && (debugLevel <= level)) \
-         printf("At time %u - %s %s[%d] %s() " fmt "\n", xTaskGetTickCount(), levelText(level), __FILE__, __LINE__, __func__, ##__VA_ARGS__); \
-  } while(0)
+		if (DEBUG_ENABLED && (debugLevel <= level)) { \
+			if (uart_mutex != NULL) {	\
+				if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) { \
+					printf("%u - %s %s[%d] %s() " fmt "\n", xTaskGetTickCount(), \
+							levelText(level), __FILE__, __LINE__, __func__, ##__VA_ARGS__); \
+					xSemaphoreGive(uart_mutex); \
+				}\
+			}\
+       }\
+} while(0)
 
 #ifdef __cplusplus
 }

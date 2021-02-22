@@ -2,10 +2,20 @@
 
 #include <stdio.h>
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
 enum debugLevels debugLevel = Info;
 
 FILE *debugFile = NULL;
+
+SemaphoreHandle_t uart_mutex;
+
+void debugInit(void)
+{
+	uart_mutex = xSemaphoreCreateMutex();
+}
 
 /**
  * @brief 	sets debug level.

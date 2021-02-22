@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -40,6 +41,8 @@ static void prvSetupHardware(void)
 	SystemCoreClockUpdate();
 	Board_SystemInit();
 
+	debugInit();
+
 	Board_Init();
 	dout_init();
 	relay_init();
@@ -49,7 +52,7 @@ static void prvSetupHardware(void)
     pole_init();
 	lift_init();
 			  
-	/* Initial LED DOUT4 state is off to show an unconnected cable state */
+	/* Utilizo el led spare para detectar conexión fisica del cable ethernet */
 	relay_spare_led(0); /* LOW */
 }
 
@@ -77,8 +80,7 @@ int main(void)
 	prvSetupHardware();
 	debugSetLevel(Info);
 
-	/* Add another thread for initializing physical interface. This
-	   is delayed from the main LWIP initialization. */
+	/* Task - Ethernet PHY Initialization  */
 	xTaskCreate(vStackIpSetup, "StackIpSetup",
 				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
 				(xTaskHandle *) NULL);
