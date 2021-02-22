@@ -12,7 +12,7 @@
 #include "debug.h"
 #include "relay.h"
 
-#define LIFT_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
+#define LIFT_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
 
 QueueHandle_t lift_queue = NULL;
 
@@ -31,35 +31,42 @@ static void lift_task(void *par)
 	while (true) {
 
 		if (xQueueReceive(lift_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
-			lDebug(Info, "lift: command received");
 
 			switch (msg_rcv->type) {
 			case LIFT_TYPE_UP:
+				// HMI sends a STOP in between, so direct reverse never happens
 				if (lift.type == LIFT_TYPE_DOWN) {
 					relay_lift_pwr(false);
 					vTaskDelay(
 							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
 				}
+				// leaving this check just in case
+
 				lift.type = LIFT_TYPE_UP;
 				relay_lift_dir(LIFT_DIRECTION_UP);
 				relay_lift_pwr(true);
-				lDebug(Info, "lift: UP");
+				lDebug(Info, "lift: command received: UP");
 				break;
+
 			case LIFT_TYPE_DOWN:
+				// HMI sends a STOP in between, so direct reverse never happens
 				if (lift.type == LIFT_TYPE_UP) {
 					relay_lift_pwr(false);
 					vTaskDelay(
 							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
 				}
+				// leaving this check just in case
+
 				lift.type = LIFT_TYPE_DOWN;
 				relay_lift_dir(LIFT_DIRECTION_DOWN);
 				relay_lift_pwr(true);
-				lDebug(Info, "lift: DOWN");
+				lDebug(Info, "lift: command received: DOWN");
 				break;
+
 			default:
 				lift.type = LIFT_TYPE_STOP;
 				relay_lift_pwr(false);
-				lDebug(Info, "lift: STOP");
+				lDebug(Info, "lift: command received: STOP");
 				break;
 			}
 
