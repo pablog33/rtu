@@ -134,7 +134,7 @@ void vStackIpSetup(void *pvParameters) {
 		}
 
 		/* Print IP address info */
-		if (!prt_ip) {
+	if (!prt_ip) {
 			if (lpc_netif.ip_addr.addr) {
 				static char tmp_buff[16];
 				DEBUGOUT("\n\n\r - NASA GSPC - \n SM-13 New Fixture Controller Remote Terminal Unit. \n Attempting to open interface.\n\n\r");

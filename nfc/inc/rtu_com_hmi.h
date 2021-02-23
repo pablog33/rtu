@@ -27,7 +27,7 @@
  * @brief Espera de nueva trama desde HMI dentro de este intrvalo de tiempo.
  * @note Al generarse timeout, se produce la desconexion por parte de la RTU.
  */
-#define	RCV_TIMEO		2000
+#define	RCV_TIMEO		1000
 
 #define RCV_TRAMA_LARGO	41
 

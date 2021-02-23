@@ -107,7 +107,8 @@ tcp_thread(void *arg)
 /*-----------------------------------------------------------------------------------*/
 void stackIp_ThreadInit(void)
 {
-  sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+  //sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+	sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, configMAX_PRIORITIES - 2);
 }
 /*-----------------------------------------------------------------------------------*/
 /**

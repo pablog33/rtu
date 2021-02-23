@@ -17,8 +17,8 @@
 #include "pid.h"
 #include "tmr.h"
 
-#define ARM_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
-#define ARM_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES )
+#define ARM_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
+#define ARM_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES - 3)
 
 QueueHandle_t arm_queue = NULL;
 

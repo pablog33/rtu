@@ -18,8 +18,8 @@
 #include "tmr.h"
 #include "spi.h"
 
-#define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
-#define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES )
+#define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
+#define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES - 3 )
 
 QueueHandle_t pole_queue = NULL;
 
