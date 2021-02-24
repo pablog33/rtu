@@ -264,9 +264,9 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 				me->freq = mot_pap_freq_calculate(me->pid, me->posCmd,
 						me->posAct);
 				tmr_set_freq(&(me->tmr), me->freq);
-				lDebug(Info, "%s: CLOSED LOOP, speed: %u, direction: %s",
-						me->name, me->freq,
-						me->dir == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
+//				lDebug(Info, "%s: CLOSED LOOP, speed: %u, direction: %s",
+//						me->name, me->freq,
+//						me->dir == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
 				if (!tmr_started(&(me->tmr))) {
 					tmr_start(&(me->tmr));
 				}
