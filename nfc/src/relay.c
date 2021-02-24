@@ -72,9 +72,9 @@ void relay_lift_pwr(bool state)
 void relay_lift_dir(enum lift_direction dir)
 {
 	if (dir == LIFT_DIRECTION_UP) {
-		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
-	} else {
 		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4);
+	} else {
+		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
 	}
 }
 
