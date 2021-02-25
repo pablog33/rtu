@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <wdt.h>
 
 
 #include "FreeRTOS.h"
@@ -87,6 +88,8 @@ int main(void)
 	xTaskCreate(vStackIpSetup, "StackIpSetup",
 				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
 				(xTaskHandle *) NULL);
+
+	wdt_check();
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
