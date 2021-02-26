@@ -201,6 +201,7 @@ void pole_set_ccwLimit(uint16_t pos)
  */
 struct mot_pap *pole_get_status(void) /* GPa 201207 retorna (*) */
 {
+	mot_pap_init_limits(&pole);
 	return &pole; /* GPa 201207 retorna (&) */
 }
 

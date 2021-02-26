@@ -196,6 +196,7 @@ void arm_set_ccwLimit(uint16_t pos)
  */
 struct mot_pap *arm_get_status(void) /* GPa 201207 retorna (*) */
 {
+	mot_pap_init_limits(&arm);
 	return &arm; /* GPa 201207 retorna (&) */
 }
 

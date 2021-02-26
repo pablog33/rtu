@@ -315,5 +315,12 @@ void mot_pap_isr(struct mot_pap *me)
 	}
 }
 
-
+/**
+ * @brief 	updates the current position from RDC
+ * @param 	me : struct mot_pap pointer
+ */
+void mot_pap_update_position(struct mot_pap *me)
+{
+	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
+}
 

@@ -93,6 +93,8 @@ void mot_pap_isr(struct mot_pap *me);
 
 struct mot_pap *arm_get_status(void); /* Llevar a arm.h */
 
+void mot_pap_update_position(struct mot_pap *me);
+
 extern QueueHandle_t lift_queue;
 extern QueueHandle_t pole_queue;
 extern QueueHandle_t arm_queue;
