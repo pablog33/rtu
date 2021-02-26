@@ -24,7 +24,7 @@ tcp_thread(void *arg)
 	LWIP_UNUSED_ARG(arg);
 	struct netconn *conn, *newconn;
 	err_t err_accept, err_recv, err_send, err_dataBuf;
-	void *unused;
+	//void *unused;
 
 	/* Nuevo identificador de conexion -conn- */
 	conn = netconn_new(NETCONN_TCP);

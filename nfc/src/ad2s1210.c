@@ -373,6 +373,8 @@ int32_t ad2s1210_init(struct ad2s1210 *me)
 	if (ret < 0)
 		return ret;
 	ret = ad2s1210_soft_reset(me);
+
+	ad2s1210_set_reg(me, AD2S1210_REG_LOS_THRD, 50);
 	return ret;
 }
 

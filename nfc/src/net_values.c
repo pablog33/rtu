@@ -35,8 +35,8 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	struct mot_pap *pArmStatus= arm_get_status();
 	struct lift *pLiftStatus= lift_status_get();
 
-	pRTUDataTx->resActArm = pArmStatus->posAct;
-	pRTUDataTx->resActPole = pPoleStatus->posAct;
+	pRTUDataTx->posActArm = pArmStatus->posAct;
+	pRTUDataTx->posActPole = pPoleStatus->posAct;
 	pRTUDataTx->velActArm = pArmStatus->freq;
 	pRTUDataTx->velActPole = pPoleStatus->freq;
 
@@ -74,7 +74,7 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 
 
 	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %d ",
-	pRTUDataTx->resActArm, pRTUDataTx->velActArm, pRTUDataTx->resActPole, pRTUDataTx->velActPole,
+	pRTUDataTx->posActArm, pRTUDataTx->posActPole, pRTUDataTx->velActArm, pRTUDataTx->velActPole,
 	pRTUDataTx->cwLimitArm, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
 	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->status);
 

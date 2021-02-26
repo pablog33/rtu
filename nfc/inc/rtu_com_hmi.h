@@ -137,8 +137,8 @@ enum { RTU_NETVAR_SIZE = 9 };
  */
  typedef struct
 {
-	uint16_t resActArm;
-	uint16_t resActPole;
+	uint16_t posActArm;
+	uint16_t posActPole;
 	uint16_t velActArm;
 	uint16_t velActPole;
 	char cwLimitArm[RTU_NETVAR_SIZE];
