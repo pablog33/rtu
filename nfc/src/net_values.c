@@ -126,12 +126,12 @@ int16_t NetValuesReceivedFromHMI(HMIData_t *HMIData, HMICmd_t *HMICmd, uint16_t 
 
 				/*	-- ctrlEn --	*/
 				if (!strncmp(HMIData->ctrlEn, "CTLE;", HMI_NETVAR_SIZE)) { HMICmd->ctrlEn = eEnable; }
-				else if (!strncmp(HMIData->ctrlEn, "DCTL;", HMI_NETVAR_SIZE)) { HMICmd->ctrlEn = eDesable; }
+				else if (!strncmp(HMIData->ctrlEn, "DCTL;", HMI_NETVAR_SIZE)) { HMICmd->ctrlEn = eDisable; }
 				else { lDebug(Error,"error- HMICmd->ctrlEn"); iServerStatus = ERROR_TRAMA_DATO; }
 
 				/*	-- stallEn --	*/
 				if (!strncmp(HMIData->stallEn, "STLE;", HMI_NETVAR_SIZE)) { HMICmd->stallEn = eEnable; }
-				else if (!strncmp(HMIData->stallEn, "DSTL;", HMI_NETVAR_SIZE)) { HMICmd->stallEn = eDesable; }
+				else if (!strncmp(HMIData->stallEn, "DSTL;", HMI_NETVAR_SIZE)) { HMICmd->stallEn = eDisable; }
 				else { lDebug(Error,"error- HMICmd->stallEn"); iServerStatus = ERROR_TRAMA_DATO; }
 
 				/*	-- liftDir --	*/

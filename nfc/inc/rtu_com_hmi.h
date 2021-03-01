@@ -93,7 +93,7 @@ typedef enum
 }mode_t;
 typedef enum { eArm, ePole } freeRunAxis_t;
 typedef enum { eCW, eCCW } freeRunDir_t;
-typedef enum { eDesable, eEnable } enable_t;
+typedef enum { eDisable, eEnable } enable_t;
 typedef enum { eDown, eUp } liftDir_t;
 typedef enum { eUnsigned, eSigned } sign_t;
 
