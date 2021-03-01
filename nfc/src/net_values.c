@@ -96,8 +96,8 @@ int16_t NetValuesReceivedFromHMI(HMIData_t *HMIData, HMICmd_t *HMICmd, uint16_t 
 			{
 			/*	Se asignan en forma directa los valores enteros correspondientes a objetivos para los resolvers	*/
 				HMICmd->posCmdArm = HMIData->posCmdArm;
-				HMICmd->velCmdArm = HMIData->velCmdArm;
 				HMICmd->posCmdPole = HMIData->posCmdPole;
+				HMICmd->velCmdArm = HMIData->velCmdArm;
 				HMICmd->velCmdPole = HMIData->velCmdPole;
 
 				if (HMICmd->velCmdArm > 8 || HMICmd->velCmdArm < 0 ) {	lDebug(Error,"error- HMICmd->velCmdArm"); iServerStatus = ERROR_TRAMA_DATO;	} /* 0x82 */
