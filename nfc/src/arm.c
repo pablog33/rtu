@@ -42,6 +42,7 @@ static void arm_task(void *par)
 		if (xQueueReceive(arm_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
 			lDebug(Info, "arm: command received");
 
+			arm.stalled = false; 		// If a new command was received, assume we are not stalled
 			mot_pap_init_limits(&arm);
 
 			switch (msg_rcv->type) {
