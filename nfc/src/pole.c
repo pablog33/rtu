@@ -38,18 +38,12 @@ static struct pid pid;
 static void pole_task(void *par)
 {
 	struct mot_pap_msg *msg_rcv;
-	/*
-	 * msg_rcv:
-	 * - type
-	 * - free_run_direction
-	 * - free_run_speed
-	 * - closed_loop_setpoint
-	*/
 
 	while (true) {
 		if (xQueueReceive(pole_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
 			lDebug(Info, "pole: command received");
 
+			pole.stalled = false; 		// If a new command was received, assume we are not stalled
 			mot_pap_init_limits(&pole);
 
 			switch (msg_rcv->type) {

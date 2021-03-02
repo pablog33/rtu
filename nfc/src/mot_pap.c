@@ -62,8 +62,6 @@ int32_t mot_pap_freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos)
  */
 void mot_pap_init_limits(struct mot_pap *me)
 {
-	me->stalled = false; // If a new command was received, assume we are not stalled
-
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
