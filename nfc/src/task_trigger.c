@@ -24,12 +24,12 @@
 
 bool stall_detection;
 
-void TaskTriggerMsg(HMICmd_t *pHMICmd)
-{
+void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 	static unsigned char ucPreviousFlagByte;
 	static bool bStallPreviousFlag;
 	static uint16_t uiPreviousPosCmdArm = 0, uiPreviousPosCmdPole = 0;
-	unsigned char ucActualFlagByte, ucEventFlagByte, ucMode_ActualBits;
+	unsigned char ucActualFlagByte, ucEventFlagByte, ucMode_ActualBits,
+			ucMode_EventBits;
 	bool bSendToArm, bSendToPole, bSendToLift, bControlEnable_EventBit,
 			bTypeStop, bTypeFreeRunStart, bTypeAutoStart, bTypeLiftUp,
 			bTypeLiftDown;
@@ -85,31 +85,34 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd)
 	if (pHMICmd->freeRunDir == eCCW) {
 		BitSet(ucActualFlagByte, bit3);
 	}
-	/* -- LiftDir -- */
-	if (pHMICmd->liftDir == eUp) {
-		BitSet(ucActualFlagByte, bit4);
-	}
 	/* -- Axis -- */
 	if (pHMICmd->freeRunAxis == ePole) {
+		BitSet(ucActualFlagByte, bit4);
+	}
+	/* -- LiftDir -- */
+	if (pHMICmd->liftDir == eUp) {
 		BitSet(ucActualFlagByte, bit5);
 	}
-	/* -- posCmd -- */
-	if (pHMICmd->posCmdArm != uiPreviousPosCmdArm) {
 
-		BitSet(ucActualFlagByte, bit6);
-
-	}
-
-	if (pHMICmd->posCmdPole != uiPreviousPosCmdPole) {
-
-		BitSet(ucActualFlagByte, bit6);
-
-	}
 
 	ucEventFlagByte = ucActualFlagByte ^ ucPreviousFlagByte;
 
+	/* -- posCmd -- */
+		if (pHMICmd->posCmdArm != uiPreviousPosCmdArm) {
+
+			BitSet(ucEventFlagByte, bit6);
+
+		}
+
+		if (pHMICmd->posCmdPole != uiPreviousPosCmdPole) {
+
+			BitSet(ucEventFlagByte, bit6);
+
+		}
+
 	/* Discriminaci�n de bits para Mode, CtrlEn, y Lift, para manipulaci�n */
 	ucMode_ActualBits = 0x03 & ucActualFlagByte;
+	ucMode_EventBits = 0x03 & ucEventFlagByte;
 	bControlEnable_EventBit = BitStatus(ucEventFlagByte, bit2);
 
 	/*		--	CONDICIONAMIENTOS	--
@@ -123,13 +126,11 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd)
 			&& (pHMICmd->ctrlEn || BitStatus(ucPreviousFlagByte, bit2))) {
 		/*	-- Mode Trigger --	*/
 
-		switch (ucEventFlagByte) {
-		case 0x00:
-			break; /*	No se registraron eventos para Mode */
+		switch (ucMode_ActualBits) {
 
-		case 0x01:
-		case 0x20:
-			if (ucMode_ActualBits == 0x00) /*	-- STOP FREE RUN COMMAND --		*/
+		case 0x00: /* STOP COMMAND*/
+
+			if (ucMode_EventBits == 0x01 || (BitStatus(ucEventFlagByte, bit4)) ) /*	-- STOP FREE RUN COMMAND --		*/
 			{
 				lDebug(Info, "STOP FR MODE");
 				bTypeStop = TRUE;
@@ -138,67 +139,88 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd)
 				} else {
 					bSendToPole = TRUE;
 				}
-				if(pHMICmd->mode != eStop) { lDebug(Error, "error Condicionamiento STOP FREE RUN COMMAND");} /* Deber�a corresponder solo al modo STOP */
-			} else if (ucMode_ActualBits == 0x01) /*	--	START FREE RUN COMMAND --	*/
-			{
-				lDebug(Info, "START FR MODE");
-				bTypeFreeRunStart = TRUE;
-				if (pHMICmd->freeRunAxis == eArm) {
-					bSendToArm = TRUE;
-				} else {
-					bSendToPole = TRUE;
-				}
-				if (pHMICmd->mode != eFree_run) { lDebug(Error, "error Condicionamiento START FREE RUN COMMAND");} /* Deber�a corresponder solo al modo FreeRun */
-			} else {
-				lDebug(Warn, "RTUcomHMI.c",
-						" Info - prvTaskTriggerMsg:ucMode_EventBits case 0x01");
+				if (pHMICmd->mode != eStop) {
+					lDebug(Error,
+							"error Condicionamiento STOP FREE RUN COMMAND");
+				} /* Deberia corresponder solo al modo STOP */
 			}
 
-			break;
-
-		case 0x02:
-		case 0x40:
-			bSendToArm = TRUE;
-			bSendToPole = TRUE;
-			if (ucMode_ActualBits == 0x00) /*	-- STOP AUTO COMMAND --		*/
+			else if (ucMode_EventBits == 0x02) /*	-- STOP AUTO COMMAND --		*/
 			{
+				bSendToArm = TRUE;
+				bSendToPole = TRUE;
 				lDebug(Info, " STOP AUTO MODE");
 				bTypeStop = TRUE;
-				if(pHMICmd->mode != eStop) { lDebug(Error, "error Condicionamiento STOP AUTO MODE COMMAND"); } /* Deber�a corresponder solo al modo Automatico */
-			} else if (ucMode_ActualBits == 0x02) /*	--	START AUTO COMMAND --	*/
-			{
-				lDebug(Info, " START AUTO MODE");
-				bTypeAutoStart = TRUE;
-				if(pHMICmd->mode != eAuto) { lDebug(Error, "error Condicionamiento START AUTO MODE COMMAND"); } /* Deber�a corresponder solo al modo Automatico */
-			} else {
-				lDebug(Warn, "RTUcomHMI.c",
-						" Info - prvTaskTriggerMsg:ucMode_EventBits case 0x02");
+				if (pHMICmd->mode != eStop) {
+					lDebug(Error,
+							"error Condicionamiento STOP AUTO MODE COMMAND");
+				} /* Deberia corresponder solo al modo Automatico */
 			}
 
-			break;
-
-		case 0x03:
-			bSendToLift = TRUE;
-
-			if (ucMode_ActualBits == 0x00) /*	-- STOP LIFT COMMAND --		*/
+			else if (ucMode_EventBits == 0x03) /*	-- STOP LIFT COMMAND --		*/
 			{
 				lDebug(Info, " STOP LIFT");
 				bTypeStop = TRUE;
-				if(pHMICmd->mode == eStop) { lDebug(Error, "error Condicionamiento STOP LIFT COMMAND"); } /* Deber�a corresponder solo al modo Lift */
-			} else if (ucMode_ActualBits == 0x03) /*	--	START LIFT COMMAND --	*/
+				bSendToLift = TRUE;
+				if (pHMICmd->mode != eStop) {
+					lDebug(Error, "error Condicionamiento STOP LIFT COMMAND");
+				} /* Deberia corresponder solo al modo Lift */
 
-			{
-				lDebug(Info, " START LIFT");
-				if (pHMICmd->liftDir == eUp) {
-					bTypeLiftUp = TRUE;
-				} else {
-					bTypeLiftDown = TRUE;
-				}
+			}
 
-				if(pHMICmd->mode != eLift) { lDebug(Error, "error Condicionamiento START LIFT COMMAND"); }/* Deber�a corresponder solo al modo Lift */
+			break;
+
+		case 0x01: /*	--	START FREE RUN COMMAND --	*/
+
+			lDebug(Info, "START FR MODE");
+			bTypeFreeRunStart = TRUE;
+			if (pHMICmd->freeRunAxis == eArm) {
+				bSendToArm = TRUE;
 			} else {
-				lDebug(Warn,
-						" Info - prvTaskTriggerMsg:ucMode_EventBits case 0x03");
+				bSendToPole = TRUE;
+			}
+			if (pHMICmd->mode != eFree_run) {
+				lDebug(Error, "error Condicionamiento START FREE RUN COMMAND");
+			} /* Deberia corresponder solo al modo FreeRun */
+
+			if (ucMode_EventBits != 0x01) {
+				lDebug(Warn, "TaskTriggerMsg:ucMode_ActualBits case 0x01");
+			}
+
+			break;
+
+		case 0x02: /*	--	START AUTO COMMAND --	*/
+			bSendToArm = TRUE;
+			bSendToPole = TRUE;
+			bTypeAutoStart = TRUE;
+			lDebug(Info, " START AUTO MODE");
+
+			if (pHMICmd->mode != eAuto) {
+				lDebug(Error, "error Condicionamiento START AUTO MODE COMMAND");
+			} /* Deberia corresponder solo al modo Automatico */
+
+			if (ucMode_EventBits != 0x02 && !(ucEventFlagByte & 0x40)) {
+				lDebug(Warn, "TaskTriggerMsg:ucMode_ActualBits case 0x02");
+			}
+
+			break;
+
+		case 0x03:	/*	--	START LIFT COMMAND --	*/
+			bSendToLift = TRUE;
+			if (pHMICmd->liftDir == eUp) {
+				bTypeLiftUp = TRUE;
+			} else {
+				bTypeLiftDown = TRUE;
+			}
+
+			lDebug(Info, " START LIFT");
+
+			if (pHMICmd->mode != eLift) {
+				lDebug(Error, "error Condicionamiento START LIFT COMMAND");
+			}/* Deberia corresponder solo al modo Lift */
+
+			if (ucMode_EventBits != 0x03) {
+				lDebug(Warn, "TaskTriggerMsg:ucMode_ActualBits case 0x03");
 			}
 
 			break;
@@ -206,7 +228,7 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd)
 		}
 
 		/*	-- CtrlEn TaskTriggerMsg --	*/
-		/*	Eval�a solo la deshabiliataci�n del bit -Actual- correspondiente a Control Enable, ya que una vez en -eDisabled-
+		/*	Evalia solo la deshabiliataciin del bit -Actual- correspondiente a Control Enable, ya que una vez en -eDisabled-
 		 no se procesar� la l�gica desde -CONDICIONAMIENTOS-	*/
 		if (bControlEnable_EventBit) {
 			if (pHMICmd->ctrlEn == eDisable) {
@@ -216,7 +238,9 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd)
 				bSendToLift = TRUE;
 				relay_main_pwr(false);
 				lDebug(Info, " CONTROL DISABLE! STOP ALL!");
-				if(pHMICmd->ctrlEn != eDisable) { lDebug(Error, "error CONTROL ENABLE BIT"); }
+				if (pHMICmd->ctrlEn != eDisable) {
+					lDebug(Error, "error CONTROL ENABLE BIT");
+				}
 			} else {
 				lDebug(Info, " Se activa el control -CONTROL ENABLE-!");
 				relay_main_pwr(true);
