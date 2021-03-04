@@ -27,6 +27,7 @@
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"
+#include "rdc_test.h"
 
 /* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
 uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; 
@@ -48,9 +49,10 @@ static void prvSetupHardware(void)
 	relay_init();
 	poncho_rdc_init();
 
-	arm_init();
-    pole_init();
-	lift_init();
+	rdc_test_init();
+//	arm_init();
+//  pole_init();
+//	lift_init();
 			  
 	/* Utilizo el led spare para detectar conexión fisica del cable ethernet */
 	relay_spare_led(0); /* LOW */
@@ -80,10 +82,10 @@ int main(void)
 	prvSetupHardware();
 	debugSetLevel(Info);
 
-	/* Task - Ethernet PHY Initialization  */
-	xTaskCreate(vStackIpSetup, "StackIpSetup",
-				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
-				(xTaskHandle *) NULL);
+//	/* Task - Ethernet PHY Initialization  */
+//	xTaskCreate(vStackIpSetup, "StackIpSetup",
+//				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
+//				(xTaskHandle *) NULL);
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
