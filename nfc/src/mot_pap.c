@@ -15,7 +15,8 @@
 #include "tmr.h"
 
 // Freqs expressed in Khz
-static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75, 100, 125 };
+static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75,
+		100, 125 };
 
 /**
  * @brief	corrects possible offsets of RDC alignment.
@@ -23,11 +24,12 @@ static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75, 10
  * @param 	offset	: RDC value for 0 degrees
  * @return	the offset corrected position
  */
-uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset, uint8_t resolution)
+uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset,
+		uint8_t resolution)
 {
 	int32_t corrected = pos - offset;
 	if (corrected < 0)
-		corrected = corrected + (int32_t) (1  << resolution);
+		corrected = corrected + (int32_t) (1 << resolution);
 	return (uint16_t) corrected;
 }
 
@@ -62,7 +64,8 @@ int32_t mot_pap_freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos)
  */
 void mot_pap_init_limits(struct mot_pap *me)
 {
-	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
+	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
+			me->offset, me->rdc->resolution);
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
 
@@ -119,12 +122,12 @@ bool cwLimitReached, bool ccwLimitReached)
  */
 void mot_pap_supervise(struct mot_pap *me)
 {
-	static uint16_t last_pos = 0;
 	int32_t error;
 	bool already_there;
 	enum mot_pap_direction dir;
 
-	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
+	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
+			me->offset, me->rdc->resolution);
 
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
@@ -146,14 +149,21 @@ void mot_pap_supervise(struct mot_pap *me)
 	}
 
 	if (stall_detection) {
-		lDebug(Info, "STALL DETECTION posAct: %u, last_pos: %u", me->posAct,
-				last_pos);
-		if (abs((int) (me->posAct - last_pos)) < MOT_PAP_STALL_THRESHOLD) {
-			me->stalled = true;
-			tmr_stop(&(me->tmr));
-			relay_main_pwr(0);
-			lDebug(Warn, "%s: stalled", me->name);
-			goto cont;
+		lDebug(Info, "STALL DETECTION posAct: %u, me->last_pos: %u", me->posAct,
+				me->last_pos);
+		if (abs((int) (me->posAct - me->last_pos)) < MOT_PAP_STALL_THRESHOLD) {
+
+			me->stalled_counter++;
+			lDebug(Info, "STALLED_COUNTER %s: %i", me->name, me->stalled_counter);
+			if (me->stalled_counter >= MOT_PAP_STALL_MAX_COUNT) {
+				me->stalled = true;
+				tmr_stop(&(me->tmr));
+				relay_main_pwr(0);
+				lDebug(Warn, "%s: stalled", me->name);
+				goto cont;
+			}
+		} else {
+			me->stalled_counter = 0;
 		}
 	}
 
@@ -178,8 +188,7 @@ void mot_pap_supervise(struct mot_pap *me)
 			tmr_set_freq(&(me->tmr), me->freq);
 		}
 	}
-cont:
-	last_pos = me->posAct;
+	cont: me->last_pos = me->posAct;
 }
 
 /**
@@ -319,6 +328,7 @@ void mot_pap_isr(struct mot_pap *me)
  */
 void mot_pap_update_position(struct mot_pap *me)
 {
-	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc), me->offset, me->rdc->resolution);
+	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
+			me->offset, me->rdc->resolution);
 }
 

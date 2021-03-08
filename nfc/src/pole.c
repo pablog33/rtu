@@ -44,6 +44,8 @@ static void pole_task(void *par)
 			lDebug(Info, "pole: command received");
 
 			pole.stalled = false; 		// If a new command was received, assume we are not stalled
+			pole.stalled_counter = 0;
+
 			mot_pap_init_limits(&pole);
 
 			switch (msg_rcv->type) {
@@ -89,11 +91,11 @@ void pole_init()
 
 	pole.name = "pole";
 	pole.type = MOT_PAP_TYPE_STOP;
-	pole.cwLimit = 65535;
-	pole.ccwLimit = 0;
+	pole.cwLimit = 60000;
+	pole.ccwLimit = 100;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
-	pole.offset = 0;
+	pole.offset = 23856;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;

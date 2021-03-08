@@ -20,9 +20,10 @@ extern "C" {
 #define MOT_PAP_COMPUMOTOR_MAX_FREQ				300000
 #define MOT_PAP_DIRECTION_CHANGE_DELAY_MS		500
 
-#define MOT_PAP_SUPERVISOR_RATE    				2000	//2 means one step
+#define MOT_PAP_SUPERVISOR_RATE    				3000	//2 means one step
 #define MOT_PAP_POS_THRESHOLD 					1000
-#define MOT_PAP_STALL_THRESHOLD 				1
+#define MOT_PAP_STALL_THRESHOLD 				3
+#define MOT_PAP_STALL_MAX_COUNT					25
 
 enum mot_pap_direction {
 	MOT_PAP_DIRECTION_CW, MOT_PAP_DIRECTION_CCW,
@@ -68,12 +69,14 @@ struct mot_pap {
 	volatile bool cwLimitReached;
 	volatile bool ccwLimitReached;
 	volatile bool stalled;
+	uint16_t stalled_counter;
 	struct ad2s1210 *rdc;
 	struct pid *pid;
 	SemaphoreHandle_t supervisor_semaphore;
 	struct mot_pap_gpios gpios;
 	struct tmr tmr;
 	enum mot_pap_direction last_dir;
+	uint16_t last_pos;
 	uint32_t half_pulses;			// counts steps from the last call to supervisor task
 	uint16_t offset;
 };
