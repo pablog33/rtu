@@ -167,9 +167,9 @@ void arm_set_offset(uint16_t offset)
  * @brief	returns status of the arm task.
  * @return 	copy of status structure of the task
  */
-struct mot_pap *arm_get_status(void) /* GPa 201207 retorna (*) */
+struct mot_pap *arm_get_status(void)
 {
 	mot_pap_read_corrected_pos(&arm);
-	return &arm; /* GPa 201207 retorna (&) */
+	return &arm;
 }
 

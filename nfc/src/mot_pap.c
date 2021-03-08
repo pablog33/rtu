@@ -13,7 +13,11 @@
 #include "relay.h"
 #include "tmr.h"
 
+<<<<<<< HEAD
 // Frequencies expressed in Khz
+=======
+// Freqs expressed in Khz
+>>>>>>> Modificado algoritmo de stall detection, se declara stalled
 static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75,
 		100, 125 };
 

@@ -22,7 +22,7 @@ extern "C" {
 #define MOT_PAP_SUPERVISOR_RATE    				3000	//2 means one step
 #define MOT_PAP_POS_THRESHOLD 					10
 #define MOT_PAP_STALL_THRESHOLD 				3
-#define MOT_PAP_STALL_MAX_COUNT					25
+#define MOT_PAP_STALL_MAX_COUNT					40
 
 enum mot_pap_direction {
 	MOT_PAP_DIRECTION_CW, MOT_PAP_DIRECTION_CCW,
