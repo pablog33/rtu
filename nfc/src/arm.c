@@ -26,7 +26,6 @@ SemaphoreHandle_t arm_supervisor_semaphore;
 
 static struct mot_pap arm;
 static struct ad2s1210 rdc;
-static struct pid pid;
 
 /**
  * @brief 	handles the arm movement.
@@ -94,7 +93,7 @@ void arm_init()
 	arm.ccwLimit = 100;
 	arm.last_dir = MOT_PAP_DIRECTION_CW;
 	arm.half_pulses = 0;
-	arm.offset = 24076;
+	arm.offset = 24327;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -108,10 +107,6 @@ void arm_init()
 
 
 	arm.rdc = &rdc;
-
-	pid_controller_init(&pid, 10, 20, 20, 20, 100);
-
-	arm.pid = &pid;
 
 	arm.gpios.direction = &dout_arm_dir;
 	arm.gpios.pulse = &dout_arm_pulse;

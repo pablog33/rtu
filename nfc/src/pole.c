@@ -27,7 +27,6 @@ SemaphoreHandle_t pole_supervisor_semaphore;
 
 static struct mot_pap pole;
 static struct ad2s1210 rdc;
-static struct pid pid;
 
 /**
  * @brief 	handles the Pole movement.
@@ -95,7 +94,7 @@ void pole_init()
 	pole.ccwLimit = 100;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
-	pole.offset = 23856;
+	pole.offset = 24112;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -106,10 +105,6 @@ void pole_init()
 	ad2s1210_init(&rdc);
 
 	pole.rdc = &rdc;
-
-	pid_controller_init(&pid, 10, 20, 20, 20, 100);
-
-	pole.pid = &pid;
 
 	pole.gpios.direction = &dout_pole_dir;
 	pole.gpios.pulse = &dout_pole_pulse;

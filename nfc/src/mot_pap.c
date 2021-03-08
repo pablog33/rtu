@@ -10,7 +10,6 @@
 
 #include "ad2s1210.h"
 #include "debug.h"
-#include "pid.h"
 #include "relay.h"
 #include "tmr.h"
 
@@ -31,29 +30,6 @@ uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset,
 	if (corrected < 0)
 		corrected = corrected + (int32_t) (1 << resolution);
 	return (uint16_t) corrected;
-}
-
-/**
- * @brief 	calculates the frequency to drive the stepper motors based on a PID algorithm.
- * @param 	pid		 : pointer to pid structure
- * @param 	setpoint : desired resolver value to reach
- * @param 	pos		 : current resolver value
- * @return	the calculated frequency or the limited value to MAX and MIN frequency.
- */
-int32_t mot_pap_freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos)
-{
-	int32_t cout;
-	int32_t freq;
-
-	cout = pid_controller_calculate(pid, (int32_t) setpoint, (int32_t) pos);
-	freq = (int32_t) abs((int) cout) * MOT_PAP_CLOSED_LOOP_FREQ_MULTIPLIER;
-	if (freq > MOT_PAP_MAX_FREQ)
-		return MOT_PAP_MAX_FREQ;
-
-	if (freq < MOT_PAP_MIN_FREQ)
-		return MOT_PAP_MIN_FREQ;
-
-	return freq;
 }
 
 /**
@@ -149,12 +125,9 @@ void mot_pap_supervise(struct mot_pap *me)
 //	}
 
 	if (stall_detection) {
-		lDebug(Info, "STALL DETECTION posAct: %u, me->last_pos: %u", me->posAct,
-				me->last_pos);
 		if (abs((int) (me->posAct - me->last_pos)) < MOT_PAP_STALL_THRESHOLD) {
 
 			me->stalled_counter++;
-			lDebug(Info, "STALLED_COUNTER %s: %i", me->name, me->stalled_counter);
 			if (me->stalled_counter >= MOT_PAP_STALL_MAX_COUNT) {
 				me->stalled = true;
 				tmr_stop(&(me->tmr));
@@ -184,8 +157,6 @@ void mot_pap_supervise(struct mot_pap *me)
 				me->gpios.direction(me->dir);
 				tmr_start(&(me->tmr));
 			}
-			me->freq = mot_pap_freq_calculate(me->pid, me->posCmd, me->posAct);
-			tmr_set_freq(&(me->tmr), me->freq);
 		}
 	}
 	cont: me->last_pos = me->posAct;
@@ -203,8 +174,9 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
 {
 	bool allowed, speed_ok;
 
-	allowed = mot_pap_movement_allowed(direction, me->cwLimitReached,
-			me->ccwLimitReached);
+//	allowed = mot_pap_movement_allowed(direction, me->cwLimitReached,
+//			me->ccwLimitReached);
+	allowed = true;
 	speed_ok = mot_pap_free_run_speed_ok(speed);
 
 	if (allowed && speed_ok) {
@@ -222,9 +194,9 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
 		lDebug(Info, "%s: FREE RUN, speed: %u, direction: %s", me->name,
 				me->freq, me->dir == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
 	} else {
-		if (!allowed)
-			lDebug(Warn, "%s: movement out of bounds %s", me->name,
-					direction == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
+//		if (!allowed)
+//			lDebug(Warn, "%s: movement out of bounds %s", me->name,
+//					direction == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
 		if (!speed_ok)
 			lDebug(Warn, "%s: chosen speed out of bounds %u", me->name, speed);
 	}
@@ -242,9 +214,9 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 	bool already_there;
 	enum mot_pap_direction dir;
 
-	if ((setpoint > me->cwLimit) | (setpoint < me->ccwLimit)) {
-		lDebug(Warn, "%s: movement out of bounds", me->name);
-	} else {
+//	if ((setpoint > me->cwLimit) | (setpoint < me->ccwLimit)) {
+//		lDebug(Warn, "%s: movement out of bounds", me->name);
+//	} else {
 		me->posCmd = setpoint;
 		lDebug(Info, "%s: CLOSED_LOOP posCmd: %u posAct: %u", me->name,
 				me->posCmd, me->posAct);
@@ -258,8 +230,8 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 			lDebug(Info, "%s: already there", me->name);
 		} else {
 			dir = mot_pap_direction_calculate(error);
-			if (mot_pap_movement_allowed(dir, me->cwLimitReached,
-					me->ccwLimitReached)) {
+//			if (mot_pap_movement_allowed(dir, me->cwLimitReached,
+//					me->ccwLimitReached)) {
 				if ((me->dir != dir) && (me->type != MOT_PAP_TYPE_STOP)) {
 					tmr_stop(&(me->tmr));
 					vTaskDelay(
@@ -268,8 +240,7 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 				me->type = MOT_PAP_TYPE_CLOSED_LOOP;
 				me->dir = dir;
 				me->gpios.direction(me->dir);
-				me->freq = mot_pap_freq_calculate(me->pid, me->posCmd,
-						me->posAct);
+				me->freq = MOT_PAP_MAX_FREQ;
 				tmr_set_freq(&(me->tmr), me->freq);
 //				lDebug(Info, "%s: CLOSED LOOP, speed: %u, direction: %s",
 //						me->name, me->freq,
@@ -277,13 +248,13 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 				if (!tmr_started(&(me->tmr))) {
 					tmr_start(&(me->tmr));
 				}
-			} else {
-				lDebug(Warn, "%s: movement out of bounds %s", me->name,
-						dir == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
-			}
+//			} else {
+//				lDebug(Warn, "%s: movement out of bounds %s", me->name,
+//						dir == MOT_PAP_DIRECTION_CW ? "CW" : "CCW");
+//			}
 		}
 	}
-}
+//}
 
 /**
  * @brief	if there is a movement in process, stops it

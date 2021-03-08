@@ -6,7 +6,6 @@
 
 #include "FreeRTOS.h"
 #include "semphr.h"
-#include "pid.h"
 #include "tmr.h"
 
 #ifdef __cplusplus
@@ -21,7 +20,7 @@ extern "C" {
 #define MOT_PAP_DIRECTION_CHANGE_DELAY_MS		500
 
 #define MOT_PAP_SUPERVISOR_RATE    				3000	//2 means one step
-#define MOT_PAP_POS_THRESHOLD 					1000
+#define MOT_PAP_POS_THRESHOLD 					10
 #define MOT_PAP_STALL_THRESHOLD 				3
 #define MOT_PAP_STALL_MAX_COUNT					25
 
@@ -71,7 +70,6 @@ struct mot_pap {
 	volatile bool stalled;
 	uint16_t stalled_counter;
 	struct ad2s1210 *rdc;
-	struct pid *pid;
 	SemaphoreHandle_t supervisor_semaphore;
 	struct mot_pap_gpios gpios;
 	struct tmr tmr;
