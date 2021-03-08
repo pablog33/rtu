@@ -26,7 +26,6 @@ SemaphoreHandle_t arm_supervisor_semaphore;
 
 static struct mot_pap arm;
 static struct ad2s1210 rdc;
-static struct pid pid;
 
 /**
  * @brief 	handles the arm movement.
@@ -43,6 +42,8 @@ static void arm_task(void *par)
 			lDebug(Info, "arm: command received");
 
 			arm.stalled = false; 		// If a new command was received, assume we are not stalled
+			arm.stalled_counter = 0;
+
 			mot_pap_init_limits(&arm);
 
 			switch (msg_rcv->type) {
@@ -88,11 +89,11 @@ void arm_init()
 
 	arm.name = "arm";
 	arm.type = MOT_PAP_TYPE_STOP;
-	arm.cwLimit = 65535;
-	arm.ccwLimit = 0;
+	arm.cwLimit = 60000;
+	arm.ccwLimit = 100;
 	arm.last_dir = MOT_PAP_DIRECTION_CW;
 	arm.half_pulses = 0;
-	arm.offset = 0;
+	arm.offset = 24135 ^ 0xFFFF;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -106,10 +107,6 @@ void arm_init()
 
 
 	arm.rdc = &rdc;
-
-	pid_controller_init(&pid, 10, 20, 20, 20, 100);
-
-	arm.pid = &pid;
 
 	arm.gpios.direction = &dout_arm_dir;
 	arm.gpios.pulse = &dout_arm_pulse;
