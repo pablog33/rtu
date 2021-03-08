@@ -69,13 +69,13 @@ void mot_pap_init_limits(struct mot_pap *me)
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
 
-	if (me->posAct >= me->cwLimit) {
-		me->cwLimitReached = true;
-	}
-
-	if (me->posAct <= me->ccwLimit) {
-		me->ccwLimitReached = true;
-	}
+//	if (me->posAct >= me->cwLimit) {
+//		me->cwLimitReached = true;
+//	}
+//
+//	if (me->posAct <= me->ccwLimit) {
+//		me->ccwLimitReached = true;
+//	}
 }
 
 /**
@@ -132,21 +132,21 @@ void mot_pap_supervise(struct mot_pap *me)
 	me->cwLimitReached = false;
 	me->ccwLimitReached = false;
 
-	if ((me->dir == MOT_PAP_DIRECTION_CW)
-			&& (me->posAct >= (int32_t) me->cwLimit)) {
-		me->cwLimitReached = true;
-		tmr_stop(&(me->tmr));
-		lDebug(Warn, "%s: limit CW reached", me->name);
-		goto cont;
-	}
-
-	if ((me->dir == MOT_PAP_DIRECTION_CCW)
-			&& (me->posAct <= (int32_t) me->ccwLimit)) {
-		me->ccwLimitReached = true;
-		tmr_stop(&(me->tmr));
-		lDebug(Warn, "%s: limit CCW reached", me->name);
-		goto cont;
-	}
+//	if ((me->dir == MOT_PAP_DIRECTION_CW)
+//			&& (me->posAct >= (int32_t) me->cwLimit)) {
+//		me->cwLimitReached = true;
+//		tmr_stop(&(me->tmr));
+//		lDebug(Warn, "%s: limit CW reached", me->name);
+//		goto cont;
+//	}
+//
+//	if ((me->dir == MOT_PAP_DIRECTION_CCW)
+//			&& (me->posAct <= (int32_t) me->ccwLimit)) {
+//		me->ccwLimitReached = true;
+//		tmr_stop(&(me->tmr));
+//		lDebug(Warn, "%s: limit CCW reached", me->name);
+//		goto cont;
+//	}
 
 	if (stall_detection) {
 		lDebug(Info, "STALL DETECTION posAct: %u, me->last_pos: %u", me->posAct,
