@@ -94,7 +94,7 @@ void pole_init()
 	pole.ccwLimit = 100;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
-	pole.offset = 24112;
+	pole.offset = 24112 ^ 0xFFFF;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;

@@ -62,7 +62,7 @@ void mot_pap_init_limits(struct mot_pap *me)
  */
 enum mot_pap_direction mot_pap_direction_calculate(int32_t error)
 {
-	return error > 0 ? MOT_PAP_DIRECTION_CW : MOT_PAP_DIRECTION_CCW;
+	return error < 0 ? MOT_PAP_DIRECTION_CW : MOT_PAP_DIRECTION_CCW;
 }
 
 /**

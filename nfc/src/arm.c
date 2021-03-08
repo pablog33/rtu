@@ -93,7 +93,7 @@ void arm_init()
 	arm.ccwLimit = 100;
 	arm.last_dir = MOT_PAP_DIRECTION_CW;
 	arm.half_pulses = 0;
-	arm.offset = 24327;
+	arm.offset = 24135 ^ 0xFFFF;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;

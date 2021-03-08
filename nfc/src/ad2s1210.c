@@ -399,7 +399,9 @@ uint16_t ad2s1210_read_position(struct ad2s1210 *me)
 		pos >>= 16 - me->resolution;
 
 	me->gpios.sample(1);
-	return pos;
+
+	pos ^= 0xFFFF;			// Invertidas las lecturas de resolver
+	return (uint16_t) pos;
 }
 
 /**
