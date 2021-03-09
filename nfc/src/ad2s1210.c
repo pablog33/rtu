@@ -395,12 +395,14 @@ uint16_t ad2s1210_read_position(struct ad2s1210 *me)
 	//No creo que haga falta delay ya que hay varias instrucciones previas
 	//a leer el registro
 	pos = ad2s1210_config_read_two(me, AD2S1210_REG_POSITION);
+	me->gpios.sample(1);
+
+	if (me->reversed)
+		pos ^= 0xFFFF >> (16 - me->resolution);
+
 	if (me->hysteresis)
 		pos >>= 16 - me->resolution;
 
-	me->gpios.sample(1);
-
-	pos ^= 0xFFFF;			// Invertidas las lecturas de resolver
 	return (uint16_t) pos;
 }
 

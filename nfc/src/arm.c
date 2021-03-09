@@ -101,10 +101,8 @@ void arm_init()
 	rdc.resolution = 16;
 	rdc.fclkin = 8192000;
 	rdc.fexcit = 2000;
+	rdc.reversed = true;
 	ad2s1210_init(&rdc);
-
-	ad2s1210_soft_reset(&rdc);
-
 
 	arm.rdc = &rdc;
 
