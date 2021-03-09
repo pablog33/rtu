@@ -139,7 +139,12 @@ int16_t NetValuesReceivedFromHMI(HMIData_t *HMIData, HMICmd_t *HMICmd, uint16_t 
 				else if (!strncmp(HMIData->liftDir, "LFDW;", HMI_NETVAR_SIZE)) { HMICmd->liftDir = eDown; }
 				else { lDebug(Error,"error- HMICmd->liftDir"); iServerStatus = ERROR_TRAMA_DATO; }
 
-			} /* if -ClienteID */
+				/*	-- setCal --	*/
+				if (!strncmp(HMIData->setCal, "CAL_;", HMI_NETVAR_SIZE)) { HMICmd->setCal = eCal; }
+				else if (!strncmp(HMIData->setCal, "NOP_;", HMI_NETVAR_SIZE)) { HMICmd->setCal = eNop; }
+				else { lDebug(Error,"error- HMICmd->setCal"); iServerStatus = ERROR_TRAMA_DATO; }
+
+			}
 
 	} /* if-formato_trama */
 

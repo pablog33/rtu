@@ -21,6 +21,9 @@
 #include "mot_pap.h"
 #include "rtu_com_hmi.h"
 #include "relay.h"
+#include "pole.h"
+#include "arm.h"
+
 
 bool stall_detection;
 
@@ -57,6 +60,8 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 		}
 	}
 	bStallPreviousFlag = stall_detection;
+
+	if(pHMICmd->setCal){ arm_set_offset(pHMICmd->posCmdArm); pole_set_offset(pHMICmd->posCmdPole); }
 
 	/*	-- ucActualFlagByte -- Se consituye un byte donde 3 de sus bits -b0 a b2- representan 
 	 b0b1: mode. 00: STOP, 01: FREE RUN, 10: AUTO, 11: LIFT

@@ -29,7 +29,7 @@
  */
 #define	RCV_TIMEO		1000
 
-#define RCV_TRAMA_LARGO	46
+#define RCV_TRAMA_LARGO	51
 
 /**
 * @def ERROR_SM13
@@ -69,14 +69,14 @@ typedef struct HMIDATA
 	uint16_t posCmdPole;
 	uint8_t velCmdArm;
 	uint8_t velCmdPole;
-	char mode[HMI_NETVAR_SIZE];		/*	-- mode --			STOP; FRUN; AUTO; LIFT; */
+	char mode[HMI_NETVAR_SIZE];			/*	-- mode --			STOP; FRUN; AUTO; LIFT; */
 	char freeRunAxis[HMI_NETVAR_SIZE];	/*	-- freeRunAxis	--	POLE; ARM_;				*/
 	char freeRunDir[HMI_NETVAR_SIZE];	/*	-- freeRunDir  --	CW__; CCW_;				*/
 	char ctrlEn[HMI_NETVAR_SIZE];		/*	-- ctrlEn --		CTLE; DCTL;				*/
 	char stallEn[HMI_NETVAR_SIZE];		/*	-- stallEn --		STLE; DSTL;				*/
-	char liftDir[HMI_NETVAR_SIZE];		/*	-- LiftDir --		LFUP; LFDW;				*/
-	char clientId[HMI_NETVAR_SIZE];	/*	-- clientId --		SM13; 					*/
-
+	char liftDir[HMI_NETVAR_SIZE];		/*	-- liftDir --		LFUP; LFDW;				*/
+	char setCal[HMI_NETVAR_SIZE];		/*	-- setCal --		NOP_; CAL_; 			*/
+	char clientId[HMI_NETVAR_SIZE];		/*	-- clientId --		SM13;					*/
 } HMIData_t;
 
 /**
@@ -95,6 +95,7 @@ typedef enum { eArm, ePole } freeRunAxis_t;
 typedef enum { eCW, eCCW } freeRunDir_t;
 typedef enum { eDisable, eEnable } enable_t;
 typedef enum { eDown, eUp } liftDir_t;
+typedef enum { eNop, eCal } setCal_t;
 typedef enum { eUnsigned, eSigned } sign_t;
 
 /**
@@ -113,6 +114,7 @@ typedef struct
 	enable_t ctrlEn;
 	enable_t stallEn;
 	liftDir_t liftDir;
+	setCal_t setCal;
 	sign_t clientID;
 
 } HMICmd_t;
