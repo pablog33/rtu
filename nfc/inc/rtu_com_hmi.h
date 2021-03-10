@@ -29,7 +29,7 @@
  */
 #define	RCV_TIMEO		1000
 
-#define RCV_TRAMA_LARGO	49
+#define RCV_TRAMA_LARGO	46
 
 /**
 * @def ERROR_SM13
