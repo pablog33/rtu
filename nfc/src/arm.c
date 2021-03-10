@@ -14,7 +14,6 @@
 #include "ad2s1210.h"
 #include "debug.h"
 #include "dout.h"
-#include "pid.h"
 #include "tmr.h"
 
 #define ARM_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
@@ -44,7 +43,7 @@ static void arm_task(void *par)
 			arm.stalled = false; 		// If a new command was received, assume we are not stalled
 			arm.stalled_counter = 0;
 
-			mot_pap_init_limits(&arm);
+			arm.posAct = ad2s1210_read_position(arm.rdc);
 
 			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
@@ -67,7 +66,7 @@ static void arm_task(void *par)
 }
 
 /**
- * @brief	checks if soft limits are reached, if stalled and if position reached in closed loop.
+ * @brief	checks if stalled and if position reached in closed loop.
  * @param 	par	: unused
  * @return	never
  */
@@ -89,11 +88,8 @@ void arm_init()
 
 	arm.name = "arm";
 	arm.type = MOT_PAP_TYPE_STOP;
-	arm.cwLimit = 60000;
-	arm.ccwLimit = 100;
 	arm.last_dir = MOT_PAP_DIRECTION_CW;
 	arm.half_pulses = 0;
-	arm.offset = 24135 ^ 0xFFFF;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -147,52 +143,13 @@ void TIMER1_IRQHandler(void)
 }
 
 /**
- * @brief	gets arm RDC position
- * @return	RDC position
- */
-uint16_t arm_get_RDC_position()
-{
-	return ad2s1210_read_position(arm.rdc);
-}
-
-
-/**
- * @brief	sets arm offset
- * @param 	offset		: RDC position for 0 degrees
- * @return	nothing
- */
-void arm_set_offset(uint16_t offset)
-{
-	arm.offset = offset;
-}
-
-/**
- * @brief	sets arm CW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void arm_set_cwLimit(uint16_t pos)
-{
-	arm.cwLimit = pos;
-}
-
-/**
- * @brief	sets arm CCW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void arm_set_ccwLimit(uint16_t pos)
-{
-	arm.ccwLimit = pos;
-}
-
-/**
  * @brief	returns status of the arm task.
  * @return 	copy of status structure of the task
  */
-struct mot_pap *arm_get_status(void) /* GPa 201207 retorna (*) */
+struct mot_pap *arm_get_status(void)
 {
-	mot_pap_init_limits(&arm);
-	return &arm; /* GPa 201207 retorna (&) */
+	arm.posAct = ad2s1210_read_position(arm.rdc);
+
+	return &arm;
 }
 
