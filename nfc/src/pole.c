@@ -14,7 +14,6 @@
 #include "ad2s1210.h"
 #include "debug.h"
 #include "dout.h"
-#include "pid.h"
 #include "tmr.h"
 #include "spi.h"
 
@@ -45,7 +44,7 @@ static void pole_task(void *par)
 			pole.stalled = false; 		// If a new command was received, assume we are not stalled
 			pole.stalled_counter = 0;
 
-			mot_pap_read_corrected_pos(&pole);
+			pole.posAct = ad2s1210_read_position(pole.rdc);
 
 			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
@@ -68,7 +67,7 @@ static void pole_task(void *par)
 }
 
 /**
- * @brief	checks if soft limits are reached, if stalled and if position reached in closed loop.
+ * @brief	checks if stalled and if position reached in closed loop.
  * @param 	par	: unused
  * @return	never
  */
@@ -92,7 +91,6 @@ void pole_init()
 	pole.type = MOT_PAP_TYPE_STOP;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
-	pole.offset = 24112 ^ 0xFFFF;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -146,32 +144,13 @@ void TIMER0_IRQHandler(void)
 }
 
 /**
- * @brief	gets pole RDC position
- * @return	RDC position
- */
-uint16_t pole_get_RDC_position()
-{
-	return ad2s1210_read_position(pole.rdc);
-}
-
-
-/**
- * @brief	sets pole offset
- * @param 	offset		: RDC position for 0 degrees
- * @return	nothing
- */
-void pole_set_offset(uint16_t offset)
-{
-	pole.offset = offset;
-}
-
-/**
  * @brief	returns status of the pole task.
  * @return 	copy of status structure of the task
  */
 struct mot_pap *pole_get_status(void)
 {
-	mot_pap_read_corrected_pos(&pole);
+	pole.posAct = ad2s1210_read_position(pole.rdc);
+
 	return &pole;
 }
 

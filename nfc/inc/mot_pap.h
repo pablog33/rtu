@@ -76,10 +76,7 @@ struct mot_pap {
 	enum mot_pap_direction last_dir;
 	uint16_t last_pos;
 	uint32_t half_pulses;			// counts steps from the last call to supervisor task
-	uint16_t offset;
 };
-
-void mot_pap_read_corrected_pos(struct mot_pap *me);
 
 void mot_pap_supervise(struct mot_pap *me);
 
@@ -91,8 +88,6 @@ void mot_pap_move_closed_loop(struct mot_pap *status, uint16_t setpoint);
 void mot_pap_stop(struct mot_pap *me);
 
 void mot_pap_isr(struct mot_pap *me);
-
-void mot_pap_update_position(struct mot_pap *me);
 
 extern QueueHandle_t lift_queue;
 extern QueueHandle_t pole_queue;
