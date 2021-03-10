@@ -79,6 +79,7 @@ struct ad2s1210 {
 	uint32_t fclkin;			///< frequency of clock input
 	uint32_t fexcit;			///< excitation frequency
 	bool hysteresis;			///< cache of whether hysteresis is enabled
+	bool reversed;				///< if set will reverse the position readings
 	uint8_t resolution;			///< chip resolution could be 10/12/14/16-bit
 };
 
