@@ -14,7 +14,6 @@
 #include "ad2s1210.h"
 #include "debug.h"
 #include "dout.h"
-#include "pid.h"
 #include "tmr.h"
 #include "spi.h"
 

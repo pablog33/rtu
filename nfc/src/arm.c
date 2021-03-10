@@ -14,7 +14,6 @@
 #include "ad2s1210.h"
 #include "debug.h"
 #include "dout.h"
-#include "pid.h"
 #include "tmr.h"
 
 #define ARM_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
