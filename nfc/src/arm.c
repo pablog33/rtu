@@ -44,7 +44,7 @@ static void arm_task(void *par)
 			arm.stalled = false; 		// If a new command was received, assume we are not stalled
 			arm.stalled_counter = 0;
 
-			mot_pap_init_limits(&arm);
+			mot_pap_read_corrected_pos(&arm);
 
 			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
@@ -89,8 +89,6 @@ void arm_init()
 
 	arm.name = "arm";
 	arm.type = MOT_PAP_TYPE_STOP;
-	arm.cwLimit = 60000;
-	arm.ccwLimit = 100;
 	arm.last_dir = MOT_PAP_DIRECTION_CW;
 	arm.half_pulses = 0;
 	arm.offset = 24135 ^ 0xFFFF;
@@ -167,32 +165,12 @@ void arm_set_offset(uint16_t offset)
 }
 
 /**
- * @brief	sets arm CW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void arm_set_cwLimit(uint16_t pos)
-{
-	arm.cwLimit = pos;
-}
-
-/**
- * @brief	sets arm CCW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void arm_set_ccwLimit(uint16_t pos)
-{
-	arm.ccwLimit = pos;
-}
-
-/**
  * @brief	returns status of the arm task.
  * @return 	copy of status structure of the task
  */
 struct mot_pap *arm_get_status(void) /* GPa 201207 retorna (*) */
 {
-	mot_pap_init_limits(&arm);
+	mot_pap_read_corrected_pos(&arm);
 	return &arm; /* GPa 201207 retorna (&) */
 }
 

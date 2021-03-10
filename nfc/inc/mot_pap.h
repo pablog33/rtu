@@ -79,7 +79,7 @@ struct mot_pap {
 	uint16_t offset;
 };
 
-void mot_pap_init_limits(struct mot_pap *me);
+void mot_pap_read_corrected_pos(struct mot_pap *me);
 
 void mot_pap_supervise(struct mot_pap *me);
 
@@ -91,8 +91,6 @@ void mot_pap_move_closed_loop(struct mot_pap *status, uint16_t setpoint);
 void mot_pap_stop(struct mot_pap *me);
 
 void mot_pap_isr(struct mot_pap *me);
-
-struct mot_pap *arm_get_status(void); /* Llevar a arm.h */
 
 void mot_pap_update_position(struct mot_pap *me);
 

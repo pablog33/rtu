@@ -21,10 +21,6 @@ uint16_t arm_get_RDC_position();
 
 void arm_set_offset(uint16_t offset);
 
-void arm_set_cwLimit(uint16_t pos);
-
-void arm_set_ccwLimit(uint16_t pos);
-
 #ifdef __cplusplus
 }
 #endif

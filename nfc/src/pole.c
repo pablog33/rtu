@@ -45,7 +45,7 @@ static void pole_task(void *par)
 			pole.stalled = false; 		// If a new command was received, assume we are not stalled
 			pole.stalled_counter = 0;
 
-			mot_pap_init_limits(&pole);
+			mot_pap_read_corrected_pos(&pole);
 
 			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
@@ -90,8 +90,6 @@ void pole_init()
 
 	pole.name = "pole";
 	pole.type = MOT_PAP_TYPE_STOP;
-	pole.cwLimit = 60000;
-	pole.ccwLimit = 100;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
 	pole.offset = 24112 ^ 0xFFFF;
@@ -168,32 +166,12 @@ void pole_set_offset(uint16_t offset)
 }
 
 /**
- * @brief	sets pole CW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void pole_set_cwLimit(uint16_t pos)
-{
-	pole.cwLimit = pos;
-}
-
-/**
- * @brief	sets pole CCW limit
- * @param 	pos		: RDC position where the limit is reached
- * @return	nothing
- */
-void pole_set_ccwLimit(uint16_t pos)
-{
-	pole.ccwLimit = pos;
-}
-
-/**
  * @brief	returns status of the pole task.
  * @return 	copy of status structure of the task
  */
-struct mot_pap *pole_get_status(void) /* GPa 201207 retorna (*) */
+struct mot_pap *pole_get_status(void)
 {
-	mot_pap_init_limits(&pole);
-	return &pole; /* GPa 201207 retorna (&) */
+	mot_pap_read_corrected_pos(&pole);
+	return &pole;
 }
 
