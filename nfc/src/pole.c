@@ -44,7 +44,7 @@ static void pole_task(void *par)
 			pole.stalled = false; 		// If a new command was received, assume we are not stalled
 			pole.stalled_counter = 0;
 
-			pole.posAct = ad2s1210_read_position(pole.rdc);
+			mot_pap_read_corrected_pos(&pole);
 
 			switch (msg_rcv->type) {
 			case MOT_PAP_TYPE_FREE_RUNNING:
@@ -91,6 +91,7 @@ void pole_init()
 	pole.type = MOT_PAP_TYPE_STOP;
 	pole.last_dir = MOT_PAP_DIRECTION_CW;
 	pole.half_pulses = 0;
+	pole.offset = 41354;
 
 	rdc.gpios.reset = &poncho_rdc_reset;
 	rdc.gpios.sample = &poncho_rdc_sample;
@@ -144,13 +145,32 @@ void TIMER0_IRQHandler(void)
 }
 
 /**
+ * @brief	gets pole RDC position
+ * @return	RDC position
+ */
+uint16_t pole_get_RDC_position()
+{
+	return ad2s1210_read_position(pole.rdc);
+}
+
+
+/**
+ * @brief	sets pole offset
+ * @param 	offset		: RDC position for 0 degrees
+ * @return	nothing
+ */
+void pole_set_offset(uint16_t offset)
+{
+	pole.offset = offset;
+}
+
+/**
  * @brief	returns status of the pole task.
  * @return 	copy of status structure of the task
  */
 struct mot_pap *pole_get_status(void)
 {
-	pole.posAct = ad2s1210_read_position(pole.rdc);
-
+	mot_pap_read_corrected_pos(&pole);
 	return &pole;
 }
 
