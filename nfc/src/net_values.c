@@ -35,33 +35,39 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	struct mot_pap *pArmStatus= arm_get_status();
 	struct lift *pLiftStatus= lift_status_get();
 
-	pRTUDataTx->posActArm = pArmStatus->posAct;
-	pRTUDataTx->posActPole = pPoleStatus->posAct;
+	pRTUDataTx->posActArm = arm_get_RDC_position();
+	pRTUDataTx->posActPole = pole_get_RDC_position();
 	pRTUDataTx->velActArm = pArmStatus->freq;
 	pRTUDataTx->velActPole = pPoleStatus->freq;
 
 	/*	-- cwLimitArm --	*/
-	if (pArmStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
+	//if (pArmStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_RUN;");	}
 
 	/*	-- ccwLimitArm --	*/
-	if (pArmStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
+	//if (pArmStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_RUN;");	}
 
 	/*	-- cwLimitPole --	*/
-	if (pPoleStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_LIM;");	}
+	//if (pPoleStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_RUN;");	}
 
 	/*	-- ccwLimitPole --	*/
-	if (pPoleStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_LIM;");	}
+	//if (pPoleStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_RUN;");	}
 
 	/*	-- limitUp --	*/
-	if (pLiftStatus->upLimit)	{	sprintf(pRTUDataTx->limitUp, "%s", "LUP_LIM;");	}
+	//if (pLiftStatus->upLimit)	{	sprintf(pRTUDataTx->limitUp, "%s", "LUP_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->limitUp, "%s", "LUP_RUN;");	}
 
 	/*	-- limitDown --	*/
-	if (pLiftStatus->downLimit)	{	sprintf(pRTUDataTx->limitDown, "%s", "LDW_LIM;");	}
+	//if (pLiftStatus->downLimit)	{	sprintf(pRTUDataTx->limitDown, "%s", "LDW_LIM;");	}
+	if (0){}
 	else {	sprintf(pRTUDataTx->limitDown, "%s", "LDW_RUN;");	}
 
 	/*	-- stallAlm --	*/
