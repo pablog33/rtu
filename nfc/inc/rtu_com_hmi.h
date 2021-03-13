@@ -150,6 +150,7 @@ enum { RTU_NETVAR_SIZE = 9 };
 	char limitUp[RTU_NETVAR_SIZE];
 	char limitDown[RTU_NETVAR_SIZE];
 	char stallAlm[RTU_NETVAR_SIZE];
+	char onCondition[RTU_NETVAR_SIZE];
 	uint8_t status;
 	char buffer[100];
 

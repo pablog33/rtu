@@ -35,10 +35,19 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	struct mot_pap *pArmStatus= arm_get_status();
 	struct lift *pLiftStatus= lift_status_get();
 
+	static bool on_condition_old = false;
+	bool on_condition = false, on_condition_flag = false;
+
 	pRTUDataTx->posActArm = arm_get_RDC_position();
 	pRTUDataTx->posActPole = pole_get_RDC_position();
 	pRTUDataTx->velActArm = pArmStatus->freq;
 	pRTUDataTx->velActPole = pPoleStatus->freq;
+	on_condition = pArmStatus->already_there & pPoleStatus->already_there;
+
+	if((on_condition != on_condition_old) && on_condition)
+	{
+		on_condition_flag = true;
+	}
 
 	/*	-- cwLimitArm --	*/
 	//if (pArmStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
@@ -74,15 +83,21 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	if (pArmStatus->stalled||pPoleStatus->stalled)	{	sprintf(pRTUDataTx->stallAlm, "%s", "STL_ALM;");	}
 	else {	sprintf(pRTUDataTx->stallAlm, "%s", "STL_RUN;");	}
 
+	/* -- onCOndition -- */
+	if (on_condition ) {	sprintf(pRTUDataTx->onCondition, "%s", "ON_COND;");}
+	else {sprintf(pRTUDataTx->onCondition, "%s", "NOT_POS;");}
+
 	/*	-- status --	*/
 	if (iServerStatus) { pRTUDataTx->status = iServerStatus; }
 	else { pRTUDataTx->status = 0x00; }
 
 
-	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %d ",
+	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %s %d ",
 	pRTUDataTx->posActArm, pRTUDataTx->posActPole, pRTUDataTx->velActArm, pRTUDataTx->velActPole,
 	pRTUDataTx->cwLimitArm, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
-	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->status);
+	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->onCondition,pRTUDataTx->status);
+
+	on_condition_old = on_condition;
 
 	return;
 }
@@ -146,7 +161,7 @@ int16_t NetValuesReceivedFromHMI(HMIData_t *HMIData, HMICmd_t *HMICmd, uint16_t 
 				else { lDebug(Error,"error- HMICmd->liftDir"); iServerStatus = ERROR_TRAMA_DATO; }
 
 				/*	-- setCal --	*/
-				if (!strncmp(HMIData->setCal, "CAL_;", HMI_NETVAR_SIZE)) { HMICmd->setCal = eCal; }
+				if (!strncmp(HMIData->setCal, "CAL_;", HMI_NETVAR_SIZE)) { HMICmd->setCal = eCal; lDebug(Info, "SET_CAL POLE: %i, ARM: %i", HMIData->posCmdPole, HMIData->posCmdArm);}
 				else if (!strncmp(HMIData->setCal, "NOP_;", HMI_NETVAR_SIZE)) { HMICmd->setCal = eNop; }
 				else { lDebug(Error,"error- HMICmd->setCal"); iServerStatus = ERROR_TRAMA_DATO; }
 
