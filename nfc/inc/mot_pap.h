@@ -20,7 +20,8 @@ extern "C" {
 #define MOT_PAP_DIRECTION_CHANGE_DELAY_MS		500
 
 #define MOT_PAP_SUPERVISOR_RATE    				3000	//2 means one step
-#define MOT_PAP_POS_THRESHOLD 					10
+#define MOT_PAP_POS_PROXIMITY_THRESHOLD			100
+#define MOT_PAP_POS_THRESHOLD 					6
 #define MOT_PAP_STALL_THRESHOLD 				3
 #define MOT_PAP_STALL_MAX_COUNT					40
 
@@ -63,11 +64,8 @@ struct mot_pap {
 	uint16_t posCmd;
 	uint16_t posAct;
 	uint32_t freq;
-	uint16_t cwLimit;
-	uint16_t ccwLimit;
-	volatile bool cwLimitReached;
-	volatile bool ccwLimitReached;
-	volatile bool stalled;
+	bool stalled;
+	bool already_there;
 	uint16_t stalled_counter;
 	struct ad2s1210 *rdc;
 	SemaphoreHandle_t supervisor_semaphore;
@@ -96,6 +94,7 @@ void mot_pap_stop(struct mot_pap *me);
 void mot_pap_isr(struct mot_pap *me);
 
 void mot_pap_update_position(struct mot_pap *me);
+uint32_t mot_pap_read_on_condition(void);
 
 extern QueueHandle_t lift_queue;
 extern QueueHandle_t pole_queue;

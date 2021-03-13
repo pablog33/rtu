@@ -17,6 +17,7 @@
 static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75,
 		100, 125 };
 
+
 /**
  * @brief	corrects possible offsets of RDC alignment.
  * @param 	pos		: current RDC position
@@ -80,6 +81,8 @@ void mot_pap_supervise(struct mot_pap *me)
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
 			me->offset, me->rdc->resolution);
 
+
+
 	if (stall_detection) {
 		if (abs((int) (me->posAct - me->last_pos)) < MOT_PAP_STALL_THRESHOLD) {
 
@@ -98,9 +101,15 @@ void mot_pap_supervise(struct mot_pap *me)
 
 	if (me->type == MOT_PAP_TYPE_CLOSED_LOOP) {
 		error = me->posCmd - me->posAct;
+
+		if ((abs((int) error) < MOT_PAP_POS_PROXIMITY_THRESHOLD)) {
+			tmr_set_freq(&(me->tmr), MOT_PAP_MAX_FREQ / 4);
+		}
+
 		already_there = (abs((int) error) < MOT_PAP_POS_THRESHOLD);
 
 		if (already_there) {
+			me->already_there = true;
 			me->type = MOT_PAP_TYPE_STOP;
 			tmr_stop(&(me->tmr));
 			lDebug(Info, "%s: position reached", me->name);
@@ -168,6 +177,7 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 	already_there = (abs(error) < MOT_PAP_POS_THRESHOLD);
 
 	if (already_there) {
+		me->already_there = true;
 		tmr_stop(&(me->tmr));
 		lDebug(Info, "%s: already there", me->name);
 	} else {
@@ -233,4 +243,8 @@ void mot_pap_update_position(struct mot_pap *me)
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
 			me->offset, me->rdc->resolution);
 }
+
+
+
+
 
