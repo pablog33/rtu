@@ -43,6 +43,7 @@ static void pole_task(void *par)
 
 			pole.stalled = false; 		// If a new command was received, assume we are not stalled
 			pole.stalled_counter = 0;
+			pole.already_there = false;
 
 			mot_pap_read_corrected_pos(&pole);
 

@@ -42,6 +42,7 @@ static void arm_task(void *par)
 
 			arm.stalled = false; 		// If a new command was received, assume we are not stalled
 			arm.stalled_counter = 0;
+			arm.already_there = false;
 
 			mot_pap_read_corrected_pos(&arm);
 
