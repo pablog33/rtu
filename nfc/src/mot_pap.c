@@ -103,7 +103,9 @@ void mot_pap_supervise(struct mot_pap *me)
 		error = me->posCmd - me->posAct;
 
 		if ((abs((int) error) < MOT_PAP_POS_PROXIMITY_THRESHOLD)) {
+			me->freq = MOT_PAP_MAX_FREQ / 4;
 			tmr_set_freq(&(me->tmr), MOT_PAP_MAX_FREQ / 4);
+			tmr_start(&(me->tmr));
 		}
 
 		already_there = (abs((int) error) < MOT_PAP_POS_THRESHOLD);
@@ -191,9 +193,7 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 		me->gpios.direction(me->dir);
 		me->freq = MOT_PAP_MAX_FREQ;
 		tmr_set_freq(&(me->tmr), me->freq);
-		if (!tmr_started(&(me->tmr))) {
-			tmr_start(&(me->tmr));
-		}
+		tmr_start(&(me->tmr));
 	}
 }
 
