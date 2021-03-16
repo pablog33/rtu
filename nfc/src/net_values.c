@@ -101,7 +101,7 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	//pRTUDataTx->status = iServerStatus ? iServerStatus : 0x00;
 
 	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %s %d ",
-	pRTUDataTx->posActArm, pRTUDataTx->posActPole, pRTUDataTx->velActArm, pRTUDataTx->velActPole,
+	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp /*pRTUDataTx->velActArm*/, pRTUDataTx->velActPole,
 	pRTUDataTx->cwLimitArm, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
 	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->onCondition,pRTUDataTx->status);
 
