@@ -23,6 +23,7 @@
 #include "mot_pap.h"
 #include "pole.h"
 #include "arm.h"
+#include "temperature.h"
 
 #include "rtu_com_hmi.h"
 
@@ -30,6 +31,9 @@ static uint16_t prvFormatoTramaRecv(uint16_t uiLenDataRecv);
 
 void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 {
+
+	uint16_t temp = temperature_read();
+
 	/*	Obtengo los valores desde el driver correspondiente a cada eje -Arm, Pole, LIFT-	*/
 	struct mot_pap *pPoleStatus = pole_get_status();
 	struct mot_pap *pArmStatus= arm_get_status();

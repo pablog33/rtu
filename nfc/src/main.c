@@ -24,6 +24,7 @@
 #include "lift.h"
 #include "pole.h"
 #include "arm.h"
+#include "temperature.h"
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"
@@ -51,6 +52,8 @@ static void prvSetupHardware(void)
 	arm_init();
     pole_init();
 	lift_init();
+	temperature_init();
+
 			  
 	/* Utilizo el led spare para detectar conexión fisica del cable ethernet */
 	relay_spare_led(0); /* LOW */
