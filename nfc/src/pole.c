@@ -86,7 +86,7 @@ static void pole_supervisor_task(void *par)
  */
 void pole_init()
 {
-	pole_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
+	pole_queue = xQueueCreate(10, sizeof(struct mot_pap_msg*));
 
 	pole.name = "pole";
 	pole.type = MOT_PAP_TYPE_STOP;

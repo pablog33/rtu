@@ -85,7 +85,7 @@ static void arm_supervisor_task(void *par)
  */
 void arm_init()
 {
-	arm_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
+	arm_queue = xQueueCreate(10, sizeof(struct mot_pap_msg*));
 
 	arm.name = "arm";
 	arm.type = MOT_PAP_TYPE_STOP;

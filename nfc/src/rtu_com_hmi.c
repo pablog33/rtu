@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "lift.h"
 #include "mot_pap.h"
+#include "relay.h"
 
 #if LWIP_NETCONN
 
@@ -169,6 +170,8 @@ static void prvEmergencyStop(void)
 	pLiftMsg->type = LIFT_TYPE_STOP;
 	if (xQueueSend(lift_queue, &pLiftMsg, portMAX_DELAY) == pdPASS) { lDebug(Debug, "Comando enviado a lift.c exitoso!"); }
 	else { lDebug(Error, "Comando NO PUDO ser enviado a lift.c"); }
+
+	relay_main_pwr(false);
 
 	return;
 

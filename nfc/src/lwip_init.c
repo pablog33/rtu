@@ -15,6 +15,7 @@
 #endif
 
 #include "board.h"
+#include "relay.h"
 #include "arch/lpc18xx_43xx_emac.h"
 #include "arch/lpc_arch.h"
 #include "arch/sys_arch.h"
