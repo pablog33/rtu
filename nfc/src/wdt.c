@@ -91,18 +91,14 @@ void vApplicationTickHook(void)
 
 		NVIC_EnableIRQ(WWDT_IRQn); /* Enable watchdog interrupt */
 
-		__disable_irq();
 		Chip_WWDT_Feed(LPC_WWDT);
-		__enable_irq();
 		Chip_WWDT_ClearStatusFlag(LPC_WWDT,
 		WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT);
 
 		first_cycle = FALSE;
 	}
 	else {
-		__disable_irq();
 		Chip_WWDT_Feed(LPC_WWDT);
-		__enable_irq();
 		Chip_WWDT_ClearStatusFlag(LPC_WWDT,
 		WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT);
 	}
