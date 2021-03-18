@@ -63,14 +63,23 @@ void vApplicationTickHook(void)
 
 		int tc_mseg = 10;
 
+		uint32_t WDT_TO = ((WDT_OSC) / (4 * 1000)) * tc_mseg;
+
+		uint32_t WDT_WINT = WDT_TO / 10;
+
+		uint32_t WDT_WIND = WDT_TO;
+
 		/* Initialize WWDT */
 		Chip_WWDT_Init(LPC_WWDT);
 
-		/* Initialize WDT */
-		LPC_WWDT->TC = ((WDT_OSC) / (4 * 1000)) * tc_mseg;
-		LPC_WWDT->WINDOW = LPC_WWDT->TC; /* WINDOW: Max count value from wich a FEED can be credited */
+		Chip_WWDT_SetTimeOut(LPC_WWDT, WDT_TO);
 
-		Chip_WWDT_SetWarning(LPC_WWDT, 0);
+		Chip_WWDT_SetWarning(LPC_WWDT, WDT_WINT); /* WINDOW: Max count value from wich a FEED can be credited */
+
+		Chip_WWDT_SetWindow(LPC_WWDT, WDT_WIND);  /* WINDOW: Max count value from wich a FEED can be credited */
+
+		/* Enable Reset on Time out */
+		Chip_WWDT_SetOption(LPC_WWDT, WWDT_WDMOD_WDRESET);
 
 		Chip_WWDT_ClearStatusFlag(LPC_WWDT,
 		WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT); /* Time Out Flag (0x04); Warning flag (0x08) */
