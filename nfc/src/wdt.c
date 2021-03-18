@@ -35,27 +35,27 @@ void wdt_check(void)
 
 void vApplicationTickHook(void)
 {
-	static uint32_t test = 10000;
-
-	static uint16_t led_wdt = 1000;
-
-	/* -----------------------------------------------------*/
-	/* -- spare led flashing 1 hz, when entering appTickHook*/
-	if (!test) {
-		configASSERT(0);
-		test = 10000;
-	}
-	--test;
-	/* ---------------------------------------------------------*/
-
-	/* -----------------------------------------------------*/
-	/* -- spare led flashing 1 hz, when entering appTickHook*/
-	if (!led_wdt) {
-		dout_arm_pulse();
-		led_wdt = 1000;
-	}
-	--led_wdt;
-	/* ---------------------------------------------------------*/
+//	static uint32_t test = 10000;
+//
+//	static uint16_t led_wdt = 1000;
+//
+//	/* -----------------------------------------------------*/
+//	/* -- spare led flashing 1 hz, when entering appTickHook*/
+//	if (!test) {
+//		configASSERT(0);
+//		test = 10000;
+//	}
+//	--test;
+//	/* ---------------------------------------------------------*/
+//
+//	/* -----------------------------------------------------*/
+//	/* -- spare led flashing 1 hz, when entering appTickHook*/
+//	if (!led_wdt) {
+//		dout_arm_pulse();
+//		led_wdt = 1000;
+//	}
+//	--led_wdt;
+//	/* ---------------------------------------------------------*/
 
 	static bool first_cycle = TRUE;
 
@@ -103,13 +103,13 @@ void vApplicationTickHook(void)
 		__disable_irq();
 		Chip_WWDT_Feed(LPC_WWDT);
 		__enable_irq();
-//		Chip_WWDT_ClearStatusFlag(LPC_WWDT,
-//		WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT);
+		Chip_WWDT_ClearStatusFlag(LPC_WWDT,
+		WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT);
 	}
 }
 
-void WDT_IRQHandler(void)
-{
-	while (1);
-}
+//void WDT_IRQHandler(void)
+//{
+//	while (1);
+//}
 
