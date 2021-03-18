@@ -35,29 +35,27 @@ void wdt_check(void)
 
 void vApplicationTickHook(void)
 {
-	static uint32_t config_ass = 1000000;
+	static uint32_t test = 10000;
 
 	static uint16_t led_wdt = 1000;
 
-	if(!led_wdt){
-
-		dout_arm_pulse();
-
-		led_wdt = 1000;
-
+	/* -----------------------------------------------------*/
+	/* -- spare led flashing 1 hz, when entering appTickHook*/
+	if (!test) {
+		configASSERT(0);
+		test = 10000;
 	}
+	--test;
+	/* ---------------------------------------------------------*/
 
+	/* -----------------------------------------------------*/
+	/* -- spare led flashing 1 hz, when entering appTickHook*/
+	if (!led_wdt) {
+		dout_arm_pulse();
+		led_wdt = 1000;
+	}
 	--led_wdt;
-
-	if(!led_wdt){
-
-			dout_arm_pulse();
-
-			led_wdt = 1000;
-
-		}
-
-		--led_wdt;
+	/* ---------------------------------------------------------*/
 
 	static bool first_cycle = TRUE;
 
