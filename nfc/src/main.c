@@ -89,7 +89,11 @@ int main(void)
 				configMINIMAL_STACK_SIZE*4, NULL, (tskIDLE_PRIORITY + 1UL),
 				(xTaskHandle *) NULL);
 
-	wdt_check();
+
+
+	if(WDT_ENABLED){
+		wdt_check();
+	}
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
