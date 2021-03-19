@@ -1,0 +1,35 @@
+Error: timed out while waiting for target halted
+Error: timed out while waiting for target halted
+Warn : target not halted
+Warn : lpc2000 prepare sectors returned -1874873104
+Error: failed erasing sectors 0 to 8
+Error: flash_erase returned -902
+Info : Halt timed out, wake up GDB.
+Warn : Timeout (1000ms) waiting for ACK=OK/FAULT in JTAG-DP transaction - aborting
+Error: JTAG-DP OVERRUN - check clock, memaccess, or reduce jtag speed
+Error: JTAG-DP STICKY ERROR
+Error: MEM_AP_CSW 0x23000051, MEM_AP_TAR 0xfffff000
+Error: Failed to read memory and, additionally, failed to find out where
+Warn : Timeout (1000ms) waiting for ACK=OK/FAULT in JTAG-DP transaction - aborting
+Error: JTAG-DP OVERRUN - check clock, memaccess, or reduce jtag speed
+Error: JTAG-DP STICKY ERROR
+Error: MEM_AP_CSW 0x23000051, MEM_AP_TAR 0xfffff000
+Error: Failed to read memory and, additionally, failed to find out where
+Terminate openocd
+shutdown command invoked
+
+
+
+
+/*-----------------------------------------------------------*/
+
+rror in final launch sequence
+Failed to execute MI command:
+load /home/gspc/Proyectos/SM-13/rtu/Debug/rtu.axf
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+Failed to execute MI command:
+load /home/gspc/Proyectos/SM-13/rtu/Debug/rtu.axf
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+Error erasing flash with vFlashErase packet

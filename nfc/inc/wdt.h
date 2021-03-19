@@ -24,4 +24,6 @@ void wdt_check(void);
 
 void wdt_test(void);
 
+void din_init(void);
+
 #endif /* NFC_INC_WDT_H_ */

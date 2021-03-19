@@ -54,6 +54,7 @@ static void prvSetupHardware(void)
     pole_init();
 	lift_init();
 	temperature_init();
+	din_init();
 
 			  
 	/* Utilizo el led spare para detectar conexión fisica del cable ethernet */

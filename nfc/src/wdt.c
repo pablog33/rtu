@@ -13,6 +13,7 @@
 #include "dout.h"
 #include "relay.h"
 #include "wdt.h"
+#include "debug.h"
 
 void wdt_check(void) {
 
@@ -38,6 +39,12 @@ void vApplicationTickHook(void) {
 	if (WDT_TEST) {
 
 		wdt_test();
+	}
+
+	if(Chip_GPIO_GetPinState(LPC_GPIO_PORT, 3, 14)){
+
+		HERE;
+
 	}
 
 	if (WDT_ENABLED) {
