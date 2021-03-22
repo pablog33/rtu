@@ -32,6 +32,6 @@ void wdt_init(void);
 
 void wdt_stop(void);
 
-//static bool wdt_started;
+static bool wdt_started;
 
 #endif /* NFC_INC_WDT_H_ */
