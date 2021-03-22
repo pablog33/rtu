@@ -22,7 +22,7 @@
 
 //void wdt_check(void);
 
-//void wdt_test(void);
+void wdt_test(void);
 
 //void din_init(void);
 
@@ -32,6 +32,6 @@ void wdt_init(void);
 
 void wdt_stop(void);
 
-static bool wdt_started;
+//static bool wdt_started;
 
 #endif /* NFC_INC_WDT_H_ */

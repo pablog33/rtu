@@ -15,7 +15,7 @@
 #include "wdt.h"
 #include "debug.h"
 
-static bool wdt_started = false;
+//static bool wdt_started = false;
 
 //void wdt_check(void) {
 //
@@ -54,7 +54,7 @@ void wdt_init() {
 	Chip_WWDT_SetTimeOut(LPC_WWDT, WDT_TO);
 
 	/* -- Reset on WDT_TimeOutFLag -- */
-//	Chip_WWDT_SetOption(LPC_WWDT, WWDT_WDMOD_WDRESET);
+	Chip_WWDT_SetOption(LPC_WWDT, WWDT_WDMOD_WDRESET);
 
 	/* WINDOW: Max count value from wich a FEED can be credited */
 	Chip_WWDT_SetWindow(LPC_WWDT, WDT_WIND);
@@ -77,22 +77,25 @@ void wdt_init() {
 	Chip_WWDT_ClearStatusFlag(LPC_WWDT,
 	WWDT_WDMOD_WDTOF | WWDT_WDMOD_WDINT);
 
-	wdt_started = true;
+	//wdt_started = true;
 
 }
 
 void wdt_feed(){
 
-	if(wdt_started){
-		Chip_WWDT_Feed(LPC_WWDT);
-	}
-}
+	Chip_WWDT_Feed(LPC_WWDT);
+
+//	if(wdt_started){
+//		//Chip_WWDT_Feed(LPC_WWDT);
+//	}
+//}
 
 //void wdt_stop(){
 //
 //	LPC_WWDT->MOD = 0;
 //
 //}
+}
 
 void vApplicationTickHook(void) {
 
@@ -101,10 +104,11 @@ void vApplicationTickHook(void) {
 
 		wdt_feed();
 	}
-//	if (WDT_TEST) {
-//
-//		wdt_test();
-//	}
+
+	if (WDT_TEST) {
+
+		wdt_test();
+	}
 //
 //	if (Chip_GPIO_GetPinState(LPC_GPIO_PORT, 3, 14)) {
 //
@@ -123,6 +127,3 @@ void vApplicationTickHook(void) {
 //	}
 }
 
-void WDT_IRQHandler(void) {
-	for(;;){}
-}
