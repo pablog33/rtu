@@ -28,6 +28,7 @@
 #include "poncho_rdc.h"
 #include "relay.h"
 #include "rtu_com_hmi.h"
+#include "wdt.h"
 
 /* GPa 201117 1850 Iss2: agregado de Heap_4.c*/
 uint8_t __attribute__((section ("." "data" ".$" "RamLoc40"))) ucHeap[ configTOTAL_HEAP_SIZE ]; 
@@ -54,6 +55,9 @@ static void prvSetupHardware(void)
 	lift_init();
 	temperature_init();
 
+	if(WDT_ENABLED){
+		wdt_init();
+	}
 			  
 	/* Utilizo el led spare para detectar conexión fisica del cable ethernet */
 	relay_spare_led(0); /* LOW */

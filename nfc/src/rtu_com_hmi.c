@@ -8,6 +8,7 @@
 #include "lift.h"
 #include "mot_pap.h"
 #include "relay.h"
+#include "wdt.h"
 
 #if LWIP_NETCONN
 
@@ -50,6 +51,7 @@ tcp_thread(void *arg)
 			uint16_t iServerStatus = 0x00;
 			uint32_t cycleCount = 0;
 
+			/*	It is expected to receive ethernet frames periodically from HMI app. If not, operator control is lost and stop emergency is needed	*/
 			newconn->recv_timeout = RCV_TIMEO;
 
 			while ((err_recv = netconn_recv(newconn, &buf)) == ERR_OK)
@@ -87,7 +89,6 @@ tcp_thread(void *arg)
 				{	break;	}
 
 			  } /* while-netconn_recv */
-
 
 
 			if( err_recv )	{	lDebug(Error, "Error en funcion NETCONN -netconn_recv-"); prvNetconnError(err_recv);	}
@@ -172,6 +173,8 @@ static void prvEmergencyStop(void)
 	else { lDebug(Error, "Comando NO PUDO ser enviado a lift.c"); }
 
 	relay_main_pwr(false);
+
+
 
 	return;
 
