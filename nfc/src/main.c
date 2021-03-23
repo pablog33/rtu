@@ -56,6 +56,7 @@ static void prvSetupHardware(void)
 	temperature_init();
 
 	if(WDT_ENABLED){
+		wdt_check();
 		wdt_init();
 	}
 			  

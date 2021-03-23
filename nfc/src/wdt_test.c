@@ -42,7 +42,3 @@ void wdt_test(void) {
 
 }
 
-void WDT_IRQHandler(void)
-{
-	while (1);
-}
