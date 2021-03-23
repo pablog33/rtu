@@ -20,7 +20,7 @@
 #define WDT_TEST 0
 #endif	/* WDT_ENABLED */
 
-//void wdt_check(void);
+void wdt_check(void);
 
 void wdt_test(void);
 
@@ -31,7 +31,5 @@ void wdt_feed(void);
 void wdt_init(void);
 
 void wdt_stop(void);
-
-static bool wdt_started;
 
 #endif /* NFC_INC_WDT_H_ */
