@@ -52,7 +52,7 @@ void wdt_init() {
 	Chip_WWDT_SetTimeOut(LPC_WWDT, WDT_TO);
 	Chip_WWDT_SetWarning(LPC_WWDT, WDT_WINT);
 	Chip_WWDT_SetWindow(LPC_WWDT, WDT_WIND);
-//	Chip_WWDT_SetOption(LPC_WWDT, WWDT_WDMOD_WDRESET); Flash error -901
+	Chip_WWDT_SetOption(LPC_WWDT, WWDT_WDMOD_WDRESET); /* Flash error -901 */
 
 	/* Clear TimeOut and Warning Flags, Time Out Flag (0x04); Warning flag (0x08) */
 	Chip_WWDT_ClearStatusFlag(LPC_WWDT,
@@ -101,5 +101,5 @@ void vApplicationTickHook(void) {
 
 void WDT_IRQHandler(void)
 {
-	Chip_RGU_TriggerReset(RGU_CORE_RST);
+	//Chip_RGU_TriggerReset(RGU_CORE_RST);
 }
