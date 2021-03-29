@@ -175,3 +175,7 @@ struct mot_pap *pole_get_status(void)
 	return &pole;
 }
 
+uint8_t pole_get_RDC_status()
+{
+	return ad2s1210_get_fault_register(pole.rdc);
+}

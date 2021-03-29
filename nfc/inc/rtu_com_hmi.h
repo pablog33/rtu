@@ -151,7 +151,9 @@ enum { RTU_NETVAR_SIZE = 9 };
 	char limitDown[RTU_NETVAR_SIZE];
 	char stallAlm[RTU_NETVAR_SIZE];
 	char onCondition[RTU_NETVAR_SIZE];
-	uint8_t status;
+	uint8_t armrRdcStatus;
+	uint8_t poleRdcStatus;
+	uint8_t rtuStatus;
 	char buffer[100];
 
 } RTUData_t;

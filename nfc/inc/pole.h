@@ -21,6 +21,8 @@ uint16_t pole_get_RDC_position();
 
 void pole_set_offset(uint16_t offset);
 
+uint8_t pole_get_RDC_status();
+
 #ifdef __cplusplus
 }
 #endif
