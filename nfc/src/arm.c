@@ -174,7 +174,3 @@ struct mot_pap *arm_get_status(void)
 	return &arm;
 }
 
-uint8_t arm_get_RDC_status()
-{
-	return ad2s1210_get_fault_register(arm.rdc);
-}
