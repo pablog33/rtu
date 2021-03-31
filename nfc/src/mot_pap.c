@@ -104,6 +104,7 @@ void mot_pap_supervise(struct mot_pap *me)
 
 		if ((abs((int) error) < MOT_PAP_POS_PROXIMITY_THRESHOLD)) {
 			me->freq = MOT_PAP_MAX_FREQ / 4;
+			tmr_stop(&(me->tmr));
 			tmr_set_freq(&(me->tmr), MOT_PAP_MAX_FREQ / 4);
 			tmr_start(&(me->tmr));
 		}
@@ -149,6 +150,7 @@ void mot_pap_move_free_run(struct mot_pap *me, enum mot_pap_direction direction,
 		me->gpios.direction(me->dir);
 		me->freq = mot_pap_free_run_freqs[speed] * 1000;
 
+		tmr_stop(&(me->tmr));
 		tmr_set_freq(&(me->tmr), me->freq);
 		tmr_start(&(me->tmr));
 		lDebug(Info, "%s: FREE RUN, speed: %u, direction: %s", me->name,
@@ -192,6 +194,7 @@ void mot_pap_move_closed_loop(struct mot_pap *me, uint16_t setpoint)
 		me->dir = dir;
 		me->gpios.direction(me->dir);
 		me->freq = MOT_PAP_MAX_FREQ;
+		tmr_stop(&(me->tmr));
 		tmr_set_freq(&(me->tmr), me->freq);
 		tmr_start(&(me->tmr));
 	}
