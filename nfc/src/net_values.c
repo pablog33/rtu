@@ -45,8 +45,6 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	pRTUDataTx->poleRdcStatus = pole_get_RDC_status();
 	pRTUDataTx->posActArm = arm_get_RDC_position();
 	pRTUDataTx->posActPole = pole_get_RDC_position();
-	pRTUDataTx->velActArm = pArmStatus->freq;
-	pRTUDataTx->velActPole = pPoleStatus->freq;
 	on_condition = pArmStatus->already_there & pPoleStatus->already_there;
 
 
@@ -102,7 +100,7 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	//pRTUDataTx->status = iServerStatus ? iServerStatus : 0x00;
 
 	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %s %d %d %d ",
-	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp /*pRTUDataTx->velActArm*/, pRTUDataTx->velActPole, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
+	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
 	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->onCondition, pRTUDataTx->armrRdcStatus, pRTUDataTx->poleRdcStatus, pRTUDataTx->rtuStatus);
 
 	on_condition_old = on_condition;
