@@ -15,7 +15,7 @@ void TIMER1_IRQHandler(void);
 
 void arm_init();
 
-struct mot_pap *arm_get_status(void);
+struct mot_pap* arm_get_status(void);
 
 uint16_t arm_get_RDC_position();
 

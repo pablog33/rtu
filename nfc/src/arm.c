@@ -40,7 +40,7 @@ static void arm_task(void *par)
 		if (xQueueReceive(arm_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
 			lDebug(Info, "arm: command received");
 
-			arm.stalled = false; 		// If a new command was received, assume we are not stalled
+			arm.stalled = false; // If a new command was received, assume we are not stalled
 			arm.stalled_counter = 0;
 			arm.already_there = false;
 
@@ -120,8 +120,7 @@ void arm_init()
 
 	if (arm_supervisor_semaphore != NULL) {
 		// Create the 'handler' task, which is the task to which interrupt processing is deferred
-		xTaskCreate(arm_supervisor_task, "ArmSupervisor",
-		2048,
+		xTaskCreate(arm_supervisor_task, "ArmSupervisor", 2048,
 		NULL, ARM_SUPERVISOR_TASK_PRIORITY, NULL);
 		lDebug(Info, "arm: supervisor task created");
 	}
@@ -153,7 +152,6 @@ uint16_t arm_get_RDC_position()
 	return ad2s1210_read_position(arm.rdc);
 }
 
-
 /**
  * @brief	sets arm offset
  * @param 	offset		: RDC position for 0 degrees
@@ -168,7 +166,7 @@ void arm_set_offset(uint16_t offset)
  * @brief	returns status of the arm task.
  * @return 	copy of status structure of the task
  */
-struct mot_pap *arm_get_status(void)
+struct mot_pap* arm_get_status(void)
 {
 	mot_pap_read_corrected_pos(&arm);
 	return &arm;

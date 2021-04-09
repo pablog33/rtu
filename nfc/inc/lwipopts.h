@@ -45,8 +45,8 @@
 #define MEM_ALIGNMENT                   4
 
 /* pbuf buffers in pool. In zero-copy mode, these buffers are
-   located in peripheral RAM. In copied mode, they are located in
-   internal IRAM */
+ located in peripheral RAM. In copied mode, they are located in
+ internal IRAM */
 #define PBUF_POOL_SIZE                  17
 
 /* No padding needed */
@@ -56,7 +56,7 @@
 #define IP_SOF_BROADCAST_RECV           1
 
 /* The ethernet FCS is performed in hardware. The IP, TCP, and UDP
-   CRCs still need to be done in hardware. */
+ CRCs still need to be done in hardware. */
 #define CHECKSUM_GEN_IP                 1
 #define CHECKSUM_GEN_UDP                1
 #define CHECKSUM_GEN_TCP                1
@@ -66,8 +66,8 @@
 #define LWIP_CHECKSUM_ON_COPY           1
 
 /* Use LWIP version of htonx() to allow generic functionality across
-   all platforms. If you are using the Cortex Mx devices, you might
-   be able to use the Cortex __rev instruction instead. */
+ all platforms. If you are using the Cortex Mx devices, you might
+ be able to use the Cortex __rev instruction instead. */
 #define LWIP_PLATFORM_BYTESWAP          0
 
 /* Non-static memory, used with DMA pool */
@@ -104,8 +104,8 @@
 #define LWIP_STATS_DISPLAY              0
 
 /* There are more *_DEBUG options that can be selected.
-   See opts.h. Make sure that LWIP_DEBUG is defined when
-   building the code to use debug. */
+ See opts.h. Make sure that LWIP_DEBUG is defined when
+ building the code to use debug. */
 #define TCP_DEBUG                       LWIP_DBG_OFF
 #define ETHARP_DEBUG                    LWIP_DBG_OFF
 #define PBUF_DEBUG                      LWIP_DBG_OFF
@@ -115,7 +115,7 @@
 #define UDP_DEBUG                       LWIP_DBG_OFF
 
 /* This define is custom for the LPC EMAC driver. Enabled it to
-   get debug messages for the driver. */
+ get debug messages for the driver. */
 #define EMAC_DEBUG                    LWIP_DBG_OFF
 
 #define DEFAULT_THREAD_PRIO             (tskIDLE_PRIORITY + 1)
@@ -139,6 +139,5 @@
 #include "FreeRTOS.h"
 #define malloc pvPortMalloc
 #define free vPortFree
-
 
 #endif /* __LWIPOPTS_H_ */

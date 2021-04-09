@@ -49,7 +49,7 @@ struct mot_pap_msg {
  * @brief	pointers to functions to handle GPIO lines of this stepper motor.
  */
 struct mot_pap_gpios {
-	void (*direction)(enum mot_pap_direction dir);///< pointer to direction line function handler
+	void (*direction)(enum mot_pap_direction dir); ///< pointer to direction line function handler
 	void (*pulse)(void);			///< pointer to pulse line function handler
 };
 
@@ -73,7 +73,7 @@ struct mot_pap {
 	struct tmr tmr;
 	enum mot_pap_direction last_dir;
 	uint16_t last_pos;
-	uint32_t half_pulses;			// counts steps from the last call to supervisor task
+	uint32_t half_pulses;// counts steps from the last call to supervisor task
 	uint16_t offset;
 };
 

@@ -29,11 +29,10 @@ static inline int spi_write(void *buf, size_t len, void (*gpio_wr_fsync)(bool))
 			 .tx_data = buf,
 			 .length = len
 	};
-	/* @formatter:on */
+		/* @formatter:on */
 
 	return spi_sync_transfer(&t, 1, gpio_wr_fsync);
 }
-
 
 /**
  * @brief 	SPI synchronous read
@@ -49,7 +48,7 @@ static inline int spi_read(void *buf, size_t len, void (*gpio_wr_fsync)(bool))
 			 .rx_data = buf,
 			 .length = len
 	};
-	/* @formatter:on */
+		/* @formatter:on */
 
 	return spi_sync_transfer(&t, 1, gpio_wr_fsync);
 }

@@ -46,11 +46,11 @@ extern "C"
 #define PHY_USE_AUTONEG 1
 
 /* PHY interface full duplex operation or half duplex enable flag.
-   Only applies if PHY_USE_AUTONEG = 0 */
+ Only applies if PHY_USE_AUTONEG = 0 */
 #define PHY_USE_FULL_DUPLEX 1
 
 /* PHY interface 100MBS or 10MBS enable flag.
-   Only applies if PHY_USE_AUTONEG = 0 */
+ Only applies if PHY_USE_AUTONEG = 0 */
 #define PHY_USE_100MBS 1
 
 /* Defines the number of descriptors used for RX */

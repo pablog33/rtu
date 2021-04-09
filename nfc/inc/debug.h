@@ -19,12 +19,12 @@
  * <p>
  * To easily print the value of a <b>single</b> variable, use
  * <pre><tt>
-   vDebug("format", var); // "format" is the specifier (e.g. "%d" or "%s", etc)
+ vDebug("format", var); // "format" is the specifier (e.g. "%d" or "%s", etc)
  * </tt></pre>
  * <p>
  * To use debug(), but control when it prints, use
  * <pre><tt>
-   lDebug(level, "format", var); // print when debugLevel >= level
+ lDebug(level, "format", var); // print when debugLevel >= level
  * </tt></pre>
  * <p>
  * Based on code and ideas found
@@ -46,34 +46,31 @@ extern "C" {
 #endif
 
 enum debugLevels {
-    Debug,
-	Info,
-	Warn,
-    Error,
+	Debug, Info, Warn, Error,
 };
 
-static inline const char * levelText(enum debugLevels level) {
+static inline const char* levelText(enum debugLevels level)
+{
 	const char *ret;
 	switch (level) {
-		case Debug:
-			ret = "Debug";
-			break;
-		case Info:
-			ret = "Info";
-			break;
-		case Warn:
-			ret = "Warn";
-			break;
-		case Error:
-			ret = "Error";
-			break;
-		default:
-			ret = "";
-			break;
+	case Debug:
+		ret = "Debug";
+		break;
+	case Info:
+		ret = "Info";
+		break;
+	case Warn:
+		ret = "Warn";
+		break;
+	case Error:
+		ret = "Error";
+		break;
+	default:
+		ret = "";
+		break;
 	}
 	return ret;
 }
-
 
 /**
  * controls how much debug output is produced. Higher values produce more
@@ -86,7 +83,7 @@ extern SemaphoreHandle_t uart_mutex;
  * The file where debug output is written. Defaults to <tt>stderr</tt>.
  * <tt>debugToFile()</tt> allows output to any file.
  */
-extern FILE* debugFile;
+extern FILE *debugFile;
 
 void debugInit(void);
 

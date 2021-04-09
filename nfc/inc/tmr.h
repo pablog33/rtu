@@ -11,13 +11,12 @@ extern "C" {
 #endif
 
 struct tmr {
-	bool 		started;
+	bool started;
 	LPC_TIMER_T *lpc_timer;
-	uint32_t	rgu_timer_rst;
-	uint32_t	clk_mx_timer;
-	uint32_t	timer_IRQn;
+	uint32_t rgu_timer_rst;
+	uint32_t clk_mx_timer;
+	uint32_t timer_IRQn;
 };
-
 
 void tmr_init(struct tmr *me);
 

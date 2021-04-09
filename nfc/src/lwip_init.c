@@ -1,5 +1,4 @@
 
-
 #include "lwip/init.h"
 #include "lwip/opt.h"
 #include "lwip/sys.h"
@@ -24,9 +23,9 @@
 #include "debug.h"
 
 /* When building the example to run in FLASH, the number of available
-   pbufs and memory size (in lwipopts.h) and the number of descriptors
-   (in lpc_18xx43xx_emac_config.h) can be increased due to more available
-   IRAM. */
+ pbufs and memory size (in lwipopts.h) and the number of descriptors
+ (in lpc_18xx43xx_emac_config.h) can be increased due to more available
+ IRAM. */
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -35,25 +34,25 @@
 /* NETIF data */
 static struct netif lpc_netif;
 
-
 /* Callback for TCPIP thread to indicate TCPIP init is done */
 static void tcpip_init_done_signal(void *arg)
 {
 	/* Tell main thread TCP/IP init is done */
-	*(s32_t *) arg = 1;
+	*(s32_t*) arg = 1;
 }
 
 /* LWIP kickoff and PHY link monitor thread */
-void vStackIpSetup(void *pvParameters) {
+void vStackIpSetup(void *pvParameters)
+{
 	ip_addr_t ipaddr, netmask, gw;
 	volatile s32_t tcpipdone = 0;
 	uint32_t physts;
 	static int prt_ip = 0;
 
 	/* Wait until the TCP/IP thread is finished before
-	   continuing or wierd things may happen */
+	 continuing or wierd things may happen */
 	LWIP_DEBUGF(LWIP_DBG_ON, ("Waiting for TCPIP thread to initialize...\n"));
-	tcpip_init(tcpip_init_done_signal, (void *) &tcpipdone);
+	tcpip_init(tcpip_init_done_signal, (void*) &tcpipdone);
 	while (!tcpipdone) {
 		msDelay(1);
 	}
@@ -73,7 +72,7 @@ void vStackIpSetup(void *pvParameters) {
 
 	/* Add netif interface  */
 	if (!netif_add(&lpc_netif, &ipaddr, &netmask, &gw, NULL, lpc_enetif_init,
-				   tcpip_input)) {
+			tcpip_input)) {
 		LWIP_ASSERT("Net interface failed to initialize\r\n", 0);
 	}
 	netif_set_default(&lpc_netif);
@@ -91,10 +90,10 @@ void vStackIpSetup(void *pvParameters) {
 	stackIp_ThreadInit();
 
 	/* This loop monitors the PHY link and will handle cable events
-	   via the PHY driver. */
+	 via the PHY driver. */
 	while (1) {
 		/* Call the PHY status update state machine once in a while
-		   to keep the link status up-to-date */
+		 to keep the link status up-to-date */
 		physts = lpcPHYStsPoll();
 
 		/* Only check for connection state when the PHY status has changed */
@@ -107,41 +106,47 @@ void vStackIpSetup(void *pvParameters) {
 				if (physts & PHY_LINK_SPEED100) {
 					Chip_ENET_SetSpeed(LPC_ETHERNET, 1);
 					NETIF_INIT_SNMP(&lpc_netif, snmp_ifType_ethernet_csmacd, 100000000);
-				}
-				else {
+				} else {
 					Chip_ENET_SetSpeed(LPC_ETHERNET, 0);
 					NETIF_INIT_SNMP(&lpc_netif, snmp_ifType_ethernet_csmacd, 10000000);
 				}
 				if (physts & PHY_LINK_FULLDUPLX) {
 					Chip_ENET_SetDuplex(LPC_ETHERNET, true);
-				}
-				else {
+				} else {
 					Chip_ENET_SetDuplex(LPC_ETHERNET, false);
 				}
 
 				tcpip_callback_with_block((tcpip_callback_fn) netif_set_link_up,
-										  (void *) &lpc_netif, 1);
-			}
-			else {
+						(void*) &lpc_netif, 1);
+			} else {
 				relay_spare_led(0); /* LOW */
-				tcpip_callback_with_block((tcpip_callback_fn) netif_set_link_down,
-										  (void *) &lpc_netif, 1);
+				tcpip_callback_with_block(
+						(tcpip_callback_fn) netif_set_link_down,
+						(void*) &lpc_netif, 1);
 			}
 
-			DEBUGOUT("Link connect status: %d\r\n", ((physts & PHY_LINK_CONNECTED) != 0));
+			DEBUGOUT("Link connect status: %d\r\n",
+					((physts & PHY_LINK_CONNECTED) != 0));
 
 			/* Delay for link detection (250mS) */
 			vTaskDelay(configTICK_RATE_HZ / 4);
 		}
 
 		/* Print IP address info */
-	if (!prt_ip) {
+		if (!prt_ip) {
 			if (lpc_netif.ip_addr.addr) {
 				static char tmp_buff[16];
-				DEBUGOUT("\n\n\r - NASA GSPC - \n SM-13 New Fixture Controller Remote Terminal Unit. \n Attempting to open interface.\n\n\r");
-				DEBUGOUT("IP_ADDR    : %s\r\n", ipaddr_ntoa_r((const ip_addr_t *) &lpc_netif.ip_addr, tmp_buff, 16));
-				DEBUGOUT("NET_MASK   : %s\r\n", ipaddr_ntoa_r((const ip_addr_t *) &lpc_netif.netmask, tmp_buff, 16));
-				DEBUGOUT("GATEWAY_IP : %s\r\n", ipaddr_ntoa_r((const ip_addr_t *) &lpc_netif.gw, tmp_buff, 16));
+				DEBUGOUT(
+						"\n\n\r - NASA GSPC - \n SM-13 New Fixture Controller Remote Terminal Unit. \n Attempting to open interface.\n\n\r");
+				DEBUGOUT("IP_ADDR    : %s\r\n",
+						ipaddr_ntoa_r((const ip_addr_t* ) &lpc_netif.ip_addr,
+								tmp_buff, 16));
+				DEBUGOUT("NET_MASK   : %s\r\n",
+						ipaddr_ntoa_r((const ip_addr_t* ) &lpc_netif.netmask,
+								tmp_buff, 16));
+				DEBUGOUT("GATEWAY_IP : %s\r\n",
+						ipaddr_ntoa_r((const ip_addr_t* ) &lpc_netif.gw,
+								tmp_buff, 16));
 				prt_ip = 1;
 			}
 		}

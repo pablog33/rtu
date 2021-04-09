@@ -103,8 +103,7 @@ int32_t ad2s1210_set_resolution(struct ad2s1210 *me, uint8_t res);
 
 uint8_t ad2s1210_get_reg(struct ad2s1210 *me, uint8_t address);
 
-int32_t ad2s1210_set_reg(struct ad2s1210 *me, uint8_t address,
-		uint8_t data);
+int32_t ad2s1210_set_reg(struct ad2s1210 *me, uint8_t address, uint8_t data);
 
 uint16_t ad2s1210_read_position(struct ad2s1210 *me);
 

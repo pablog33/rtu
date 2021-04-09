@@ -17,7 +17,6 @@
 static const uint32_t mot_pap_free_run_freqs[] = { 0, 25, 25, 25, 50, 75, 75,
 		100, 125 };
 
-
 /**
  * @brief	corrects possible offsets of RDC alignment.
  * @param 	pos		: current RDC position
@@ -65,7 +64,6 @@ bool mot_pap_free_run_speed_ok(uint32_t speed)
 	return ((speed > 0) && (speed <= MOT_PAP_MAX_SPEED_FREE_RUN));
 }
 
-
 /**
  * @brief 	supervise motor movement for stall or position reached in closed loop
  * @param 	me			: struct mot_pap pointer
@@ -80,8 +78,6 @@ void mot_pap_supervise(struct mot_pap *me)
 
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
 			me->offset, me->rdc->resolution);
-
-
 
 	if (stall_detection) {
 		if (abs((int) (me->posAct - me->last_pos)) < MOT_PAP_STALL_THRESHOLD) {
@@ -246,8 +242,4 @@ void mot_pap_update_position(struct mot_pap *me)
 	me->posAct = mot_pap_offset_correction(ad2s1210_read_position(me->rdc),
 			me->offset, me->rdc->resolution);
 }
-
-
-
-
 

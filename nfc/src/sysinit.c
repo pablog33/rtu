@@ -17,11 +17,11 @@
  * retain, install, activate or otherwise use the software.
  */
 
- #if defined(NO_BOARD_LIB)
+#if defined(NO_BOARD_LIB)
  #include "chip.h"
  #else
- #include "board.h"
- #endif
+#include "board.h"
+#endif
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -48,7 +48,7 @@ const uint32_t OscRateIn = 12000000;
 void SystemInit(void)
 {
 #if defined(CORE_M3) || defined(CORE_M4)
-	unsigned int *pSCB_VTOR = (unsigned int *) 0xE000ED08;
+	unsigned int *pSCB_VTOR = (unsigned int*) 0xE000ED08;
 
 #if defined(__IAR_SYSTEMS_ICC__)
 	extern void *__vector_table;

@@ -45,7 +45,7 @@ static uint8_t ad2s1210_config_read(struct ad2s1210 *me, uint8_t address)
 	Chip_SSP_DATA_SETUP_T xfers[xfers_count];
 
 	tx[0] = address | AD2S1210_ADDRESS_MASK;
-	tx[1] = AD2S1210_REG_FAULT;				// Read some extra record to receive the data
+	tx[1] = AD2S1210_REG_FAULT;	// Read some extra record to receive the data
 
 	for (int i = 0; i < xfers_count; i++) {
 		/* @formatter:off */
@@ -56,7 +56,7 @@ static uint8_t ad2s1210_config_read(struct ad2s1210 *me, uint8_t address)
 			.rx_cnt = 0,
 			.tx_cnt = 0
 		};
-	/* @formatter:on */
+			/* @formatter:on */
 
 		xfers[i] = xfer;
 	}
@@ -73,8 +73,7 @@ static uint8_t ad2s1210_config_read(struct ad2s1210 *me, uint8_t address)
  * @note	one extra register should be read because values come one transfer after the
  * 			address was put on the bus.
  */
-static uint16_t ad2s1210_config_read_two(struct ad2s1210 *me,
-		uint8_t address)
+static uint16_t ad2s1210_config_read_two(struct ad2s1210 *me, uint8_t address)
 {
 	uint32_t xfers_count = 3;
 	uint8_t rx[xfers_count];
@@ -94,7 +93,7 @@ static uint16_t ad2s1210_config_read_two(struct ad2s1210 *me,
 			.rx_cnt = 0,
 			.tx_cnt = 0
 		};
-		/* @formatter:on */
+				/* @formatter:on */
 
 		xfers[i] = xfer;
 	}
@@ -250,7 +249,7 @@ static int32_t ad2s1210_set_control(struct ad2s1210 *me, uint8_t data)
 	int32_t ret = 0;
 
 	int32_t udata = data & AD2S1210_DATA_MASK;
-	ret = ad2s1210_set_reg(me, AD2S1210_REG_CONTROL, udata );
+	ret = ad2s1210_set_reg(me, AD2S1210_REG_CONTROL, udata);
 	if (ret < 0)
 		return ret;
 
@@ -325,8 +324,7 @@ uint8_t ad2s1210_get_reg(struct ad2s1210 *me, uint8_t address)
  * @param	data	: the value to store in the register
  * @return	the value of the addressed register
  */
-int32_t ad2s1210_set_reg(struct ad2s1210 *me, uint8_t address,
-		uint8_t data)
+int32_t ad2s1210_set_reg(struct ad2s1210 *me, uint8_t address, uint8_t data)
 {
 	int32_t ret = 0;
 
@@ -336,7 +334,6 @@ int32_t ad2s1210_set_reg(struct ad2s1210 *me, uint8_t address,
 	ret = ad2s1210_config_write(me, data & AD2S1210_DATA_MASK);
 	return ret;
 }
-
 
 /**
  * @brief	initializes the chip with the values specified in st

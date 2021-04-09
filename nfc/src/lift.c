@@ -37,8 +37,7 @@ static void lift_task(void *par)
 				// HMI sends a STOP in between, so direct reverse never happens
 				if (lift.type == LIFT_TYPE_DOWN) {
 					relay_lift_pwr(false);
-					vTaskDelay(
-							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
+					vTaskDelay(pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
 				}
 				// leaving this check just in case
 
@@ -52,8 +51,7 @@ static void lift_task(void *par)
 				// HMI sends a STOP in between, so direct reverse never happens
 				if (lift.type == LIFT_TYPE_UP) {
 					relay_lift_pwr(false);
-					vTaskDelay(
-							pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
+					vTaskDelay(pdMS_TO_TICKS(LIFT_DIRECTION_CHANGE_DELAY_MS));
 				}
 				// leaving this check just in case
 
@@ -86,7 +84,7 @@ void lift_init()
 
 	lift.type = LIFT_TYPE_STOP;
 
-	xTaskCreate(lift_task, "Lift", configMINIMAL_STACK_SIZE*2, NULL,
+	xTaskCreate(lift_task, "Lift", configMINIMAL_STACK_SIZE * 2, NULL,
 	LIFT_TASK_PRIORITY, NULL);
 	lDebug(Info, "lift: task created");
 }
@@ -95,7 +93,7 @@ void lift_init()
  * @brief	returns status of the lift task.
  * @return 	copy of status structure of the task
  */
-struct lift *lift_status_get(void) /* GPa 201207 retorna (*) */
+struct lift* lift_status_get(void) /* GPa 201207 retorna (*) */
 {
 	return &lift; /* GPa 201207 retorna (&) */
 }

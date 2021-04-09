@@ -24,10 +24,10 @@
 #include "pole.h"
 #include "arm.h"
 
-
 bool stall_detection;
 
-void TaskTriggerMsg(HMICmd_t *pHMICmd) {
+void TaskTriggerMsg(HMICmd_t *pHMICmd)
+{
 	static unsigned char ucPreviousFlagByte;
 	static bool bStallPreviousFlag;
 	static uint16_t uiPreviousPosCmdArm = 0, uiPreviousPosCmdPole = 0;
@@ -61,7 +61,10 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 	}
 	bStallPreviousFlag = stall_detection;
 
-	if(pHMICmd->setCal){ arm_set_offset(pHMICmd->posCmdArm); pole_set_offset(pHMICmd->posCmdPole); }
+	if (pHMICmd->setCal) {
+		arm_set_offset(pHMICmd->posCmdArm);
+		pole_set_offset(pHMICmd->posCmdPole);
+	}
 
 	/*	-- ucActualFlagByte -- Se consituye un byte donde 3 de sus bits -b0 a b2- representan 
 	 b0b1: mode. 00: STOP, 01: FREE RUN, 10: AUTO, 11: LIFT
@@ -99,21 +102,20 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 		BitSet(ucActualFlagByte, bit5);
 	}
 
-
 	ucEventFlagByte = ucActualFlagByte ^ ucPreviousFlagByte;
 
 	/* -- posCmd -- */
-		if (pHMICmd->posCmdArm != uiPreviousPosCmdArm) {
+	if (pHMICmd->posCmdArm != uiPreviousPosCmdArm) {
 
-			BitSet(ucEventFlagByte, bit6);
+		BitSet(ucEventFlagByte, bit6);
 
-		}
+	}
 
-		if (pHMICmd->posCmdPole != uiPreviousPosCmdPole) {
+	if (pHMICmd->posCmdPole != uiPreviousPosCmdPole) {
 
-			BitSet(ucEventFlagByte, bit6);
+		BitSet(ucEventFlagByte, bit6);
 
-		}
+	}
 
 	/* Discriminaci�n de bits para Mode, CtrlEn, y Lift, para manipulaci�n */
 	ucMode_ActualBits = 0x03 & ucActualFlagByte;
@@ -135,7 +137,7 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 
 		case 0x00: /* STOP COMMAND*/
 
-			if (ucMode_EventBits == 0x01 || (BitStatus(ucEventFlagByte, bit4)) ) /*	-- STOP FREE RUN COMMAND --		*/
+			if (ucMode_EventBits == 0x01 || (BitStatus(ucEventFlagByte, bit4))) /*	-- STOP FREE RUN COMMAND --		*/
 			{
 				lDebug(Info, "STOP FR MODE");
 				bTypeStop = TRUE;
@@ -210,7 +212,7 @@ void TaskTriggerMsg(HMICmd_t *pHMICmd) {
 
 			break;
 
-		case 0x03:	/*	--	START LIFT COMMAND --	*/
+		case 0x03: /*	--	START LIFT COMMAND --	*/
 			bSendToLift = TRUE;
 			if (pHMICmd->liftDir == eUp) {
 				bTypeLiftUp = TRUE;

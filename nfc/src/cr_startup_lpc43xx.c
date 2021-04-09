@@ -172,91 +172,90 @@ extern void _vStackTop(void);
 // This relies on the linker script to place at correct location in memory.
 //
 //*****************************************************************************
-extern void (* const g_pfnVectors[])(void);
+extern void (*const g_pfnVectors[])(void);
 __attribute__ ((used,section(".isr_vector")))
-void (* const g_pfnVectors[])(void) = {
-    // Core Level - CM4
-    &_vStackTop,                    // The initial stack pointer
-    ResetISR,                       // The reset handler
-    NMI_Handler,                    // The NMI handler
-    HardFault_Handler,              // The hard fault handler
-    MemManage_Handler,              // The MPU fault handler
-    BusFault_Handler,               // The bus fault handler
-    UsageFault_Handler,             // The usage fault handler
-    0,                              // Reserved
-    0,                              // Reserved
-    0,                              // Reserved
-    0,                              // Reserved
-    SVC_Handler,                    // SVCall handler
-    DebugMon_Handler,               // Debug monitor handler
-    0,                              // Reserved
-    PendSV_Handler,                 // The PendSV handler
-    SysTick_Handler,                // The SysTick handler
+void (*const g_pfnVectors[])(void) = {
+	// Core Level - CM4
+		&_vStackTop,// The initial stack pointer
+		ResetISR,// The reset handler
+		NMI_Handler,// The NMI handler
+		HardFault_Handler,// The hard fault handler
+		MemManage_Handler,// The MPU fault handler
+		BusFault_Handler,// The bus fault handler
+		UsageFault_Handler,// The usage fault handler
+		0,// Reserved
+		0,// Reserved
+		0,// Reserved
+		0,// Reserved
+		SVC_Handler,// SVCall handler
+		DebugMon_Handler,// Debug monitor handler
+		0,// Reserved
+		PendSV_Handler,// The PendSV handler
+		SysTick_Handler,// The SysTick handler
 
-    // Chip Level - LPC43 (M4)
-    DAC_IRQHandler,           // 16
+		// Chip Level - LPC43 (M4)
+		DAC_IRQHandler,// 16
 #if defined (__USE_LPCOPEN)
-    M0APP_IRQHandler,        // 17 CortexM4/M0 (LPC43XX ONLY)
+		M0APP_IRQHandler,        // 17 CortexM4/M0 (LPC43XX ONLY)
 #else
-    M0CORE_IRQHandler,        // 17
+		M0CORE_IRQHandler,        // 17
 #endif
-    DMA_IRQHandler,           // 18
-    0,           // 19
-    FLASH_EEPROM_IRQHandler,   // 20 ORed flash Bank A, flash Bank B, EEPROM interrupts
-    ETH_IRQHandler,           // 21
-    SDIO_IRQHandler,          // 22
-    LCD_IRQHandler,           // 23
-    USB0_IRQHandler,          // 24
-    USB1_IRQHandler,          // 25
-    SCT_IRQHandler,           // 26
-    RIT_IRQHandler,           // 27
-    TIMER0_IRQHandler,        // 28
-    TIMER1_IRQHandler,        // 29
-    TIMER2_IRQHandler,        // 30
-    TIMER3_IRQHandler,        // 31
-    MCPWM_IRQHandler,         // 32
-    ADC0_IRQHandler,          // 33
-    I2C0_IRQHandler,          // 34
-    I2C1_IRQHandler,          // 35
-    SPI_IRQHandler,           // 36
-    ADC1_IRQHandler,          // 37
-    SSP0_IRQHandler,          // 38
-    SSP1_IRQHandler,          // 39
-    UART0_IRQHandler,         // 40
-    UART1_IRQHandler,         // 41
-    UART2_IRQHandler,         // 42
-    UART3_IRQHandler,         // 43
-    I2S0_IRQHandler,          // 44
-    I2S1_IRQHandler,          // 45
-    SPIFI_IRQHandler,         // 46
-    SGPIO_IRQHandler,         // 47
-    GPIO0_IRQHandler,         // 48
-    GPIO1_IRQHandler,         // 49
-    GPIO2_IRQHandler,         // 50
-    GPIO3_IRQHandler,         // 51
-    GPIO4_IRQHandler,         // 52
-    GPIO5_IRQHandler,         // 53
-    GPIO6_IRQHandler,         // 54
-    GPIO7_IRQHandler,         // 55
-    GINT0_IRQHandler,         // 56
-    GINT1_IRQHandler,         // 57
-    EVRT_IRQHandler,          // 58
-    CAN1_IRQHandler,          // 59
-    0,                        // 60
+		DMA_IRQHandler,           // 18
+		0,// 19
+		FLASH_EEPROM_IRQHandler,// 20 ORed flash Bank A, flash Bank B, EEPROM interrupts
+		ETH_IRQHandler,// 21
+		SDIO_IRQHandler,// 22
+		LCD_IRQHandler,// 23
+		USB0_IRQHandler,// 24
+		USB1_IRQHandler,// 25
+		SCT_IRQHandler,// 26
+		RIT_IRQHandler,// 27
+		TIMER0_IRQHandler,// 28
+		TIMER1_IRQHandler,// 29
+		TIMER2_IRQHandler,// 30
+		TIMER3_IRQHandler,// 31
+		MCPWM_IRQHandler,// 32
+		ADC0_IRQHandler,// 33
+		I2C0_IRQHandler,// 34
+		I2C1_IRQHandler,// 35
+		SPI_IRQHandler,// 36
+		ADC1_IRQHandler,// 37
+		SSP0_IRQHandler,// 38
+		SSP1_IRQHandler,// 39
+		UART0_IRQHandler,// 40
+		UART1_IRQHandler,// 41
+		UART2_IRQHandler,// 42
+		UART3_IRQHandler,// 43
+		I2S0_IRQHandler,// 44
+		I2S1_IRQHandler,// 45
+		SPIFI_IRQHandler,// 46
+		SGPIO_IRQHandler,// 47
+		GPIO0_IRQHandler,// 48
+		GPIO1_IRQHandler,// 49
+		GPIO2_IRQHandler,// 50
+		GPIO3_IRQHandler,// 51
+		GPIO4_IRQHandler,// 52
+		GPIO5_IRQHandler,// 53
+		GPIO6_IRQHandler,// 54
+		GPIO7_IRQHandler,// 55
+		GINT0_IRQHandler,// 56
+		GINT1_IRQHandler,// 57
+		EVRT_IRQHandler,// 58
+		CAN1_IRQHandler,// 59
+		0,// 60
 #if defined (__USE_LPCOPEN)
-    ADCHS_IRQHandler,         // 61 ADCHS combined interrupt
+		ADCHS_IRQHandler,         // 61 ADCHS combined interrupt
 #else
-    VADC_IRQHandler,          // 61
+		VADC_IRQHandler,          // 61
 #endif
-    ATIMER_IRQHandler,        // 62
-    RTC_IRQHandler,           // 63
-    0,                        // 64
-    WDT_IRQHandler,           // 65
-    M0SUB_IRQHandler,         // 66
-    CAN0_IRQHandler,          // 67
-    QEI_IRQHandler,           // 68
+		ATIMER_IRQHandler,        // 62
+		RTC_IRQHandler,// 63
+		0,// 64
+		WDT_IRQHandler,// 65
+		M0SUB_IRQHandler,// 66
+		CAN0_IRQHandler,// 67
+		QEI_IRQHandler,// 68
 };
-
 
 //*****************************************************************************
 // Functions to carry out the initialization of RW and BSS data sections. These
@@ -264,22 +263,24 @@ void (* const g_pfnVectors[])(void) = {
 // ResetISR() function in order to cope with MCUs with multiple banks of
 // memory.
 //*****************************************************************************
-        __attribute__((section(".after_vectors"
-)))
-void data_init(unsigned int romstart, unsigned int start, unsigned int len) {
-    unsigned int *pulDest = (unsigned int*) start;
-    unsigned int *pulSrc = (unsigned int*) romstart;
-    unsigned int loop;
-    for (loop = 0; loop < len; loop = loop + 4)
-        *pulDest++ = *pulSrc++;
+__attribute__((section(".after_vectors"
+				)))
+void data_init(unsigned int romstart, unsigned int start, unsigned int len)
+{
+	unsigned int *pulDest = (unsigned int*) start;
+	unsigned int *pulSrc = (unsigned int*) romstart;
+	unsigned int loop;
+	for (loop = 0; loop < len; loop = loop + 4)
+		*pulDest++ = *pulSrc++;
 }
 
 __attribute__ ((section(".after_vectors")))
-void bss_init(unsigned int start, unsigned int len) {
-    unsigned int *pulDest = (unsigned int*) start;
-    unsigned int loop;
-    for (loop = 0; loop < len; loop = loop + 4)
-        *pulDest++ = 0;
+void bss_init(unsigned int start, unsigned int len)
+{
+	unsigned int *pulDest = (unsigned int*) start;
+	unsigned int loop;
+	for (loop = 0; loop < len; loop = loop + 4)
+		*pulDest++ = 0;
 }
 
 //*****************************************************************************
@@ -300,7 +301,8 @@ extern unsigned int __bss_section_table_end;
 // library.
 //
 //*****************************************************************************
-void ResetISR(void) {
+void ResetISR(void)
+{
 
 // *************************************************************
 // The following conditional block of code manually resets as
@@ -315,70 +317,70 @@ void ResetISR(void) {
 //
 #ifndef DONT_RESET_ON_RESTART
 
-    // Disable interrupts
-    __asm volatile ("cpsid i");
-    // equivalent to CMSIS '__disable_irq()' function
+	// Disable interrupts
+	__asm volatile ("cpsid i");
+	// equivalent to CMSIS '__disable_irq()' function
 
-    unsigned int *RESET_CONTROL = (unsigned int *) 0x40053100;
-    // LPC_RGU->RESET_CTRL0 @ 0x40053100
-    // LPC_RGU->RESET_CTRL1 @ 0x40053104
-    // Note that we do not use the CMSIS register access mechanism,
-    // as there is no guarantee that the project has been configured
-    // to use CMSIS.
+	unsigned int *RESET_CONTROL = (unsigned int*) 0x40053100;
+	// LPC_RGU->RESET_CTRL0 @ 0x40053100
+	// LPC_RGU->RESET_CTRL1 @ 0x40053104
+	// Note that we do not use the CMSIS register access mechanism,
+	// as there is no guarantee that the project has been configured
+	// to use CMSIS.
 
-    // Write to LPC_RGU->RESET_CTRL0
-    *(RESET_CONTROL + 0) = 0x10DF1000;
-    // GPIO_RST|AES_RST|ETHERNET_RST|SDIO_RST|DMA_RST|
-    // USB1_RST|USB0_RST|LCD_RST|M0_SUB_RST
+	// Write to LPC_RGU->RESET_CTRL0
+	*(RESET_CONTROL + 0) = 0x10DF1000;
+	// GPIO_RST|AES_RST|ETHERNET_RST|SDIO_RST|DMA_RST|
+	// USB1_RST|USB0_RST|LCD_RST|M0_SUB_RST
 
-    // Write to LPC_RGU->RESET_CTRL1
-    *(RESET_CONTROL + 1) = 0x01DFF7FF;
-    // M0APP_RST|CAN0_RST|CAN1_RST|I2S_RST|SSP1_RST|SSP0_RST|
-    // I2C1_RST|I2C0_RST|UART3_RST|UART1_RST|UART1_RST|UART0_RST|
-    // DAC_RST|ADC1_RST|ADC0_RST|QEI_RST|MOTOCONPWM_RST|SCT_RST|
-    // RITIMER_RST|TIMER3_RST|TIMER2_RST|TIMER1_RST|TIMER0_RST
+	// Write to LPC_RGU->RESET_CTRL1
+	*(RESET_CONTROL + 1) = 0x01DFF7FF;
+	// M0APP_RST|CAN0_RST|CAN1_RST|I2S_RST|SSP1_RST|SSP0_RST|
+	// I2C1_RST|I2C0_RST|UART3_RST|UART1_RST|UART1_RST|UART0_RST|
+	// DAC_RST|ADC1_RST|ADC0_RST|QEI_RST|MOTOCONPWM_RST|SCT_RST|
+	// RITIMER_RST|TIMER3_RST|TIMER2_RST|TIMER1_RST|TIMER0_RST
 
-    // Clear all pending interrupts in the NVIC
-    volatile unsigned int *NVIC_ICPR = (unsigned int *) 0xE000E280;
-    unsigned int irqpendloop;
-    for (irqpendloop = 0; irqpendloop < 8; irqpendloop++) {
-        *(NVIC_ICPR + irqpendloop) = 0xFFFFFFFF;
-    }
+	// Clear all pending interrupts in the NVIC
+	volatile unsigned int *NVIC_ICPR = (unsigned int*) 0xE000E280;
+	unsigned int irqpendloop;
+	for (irqpendloop = 0; irqpendloop < 8; irqpendloop++) {
+		*(NVIC_ICPR + irqpendloop) = 0xFFFFFFFF;
+	}
 
-    // Reenable interrupts
-    __asm volatile ("cpsie i");
-    // equivalent to CMSIS '__enable_irq()' function
+	// Reenable interrupts
+	__asm volatile ("cpsie i");
+	// equivalent to CMSIS '__enable_irq()' function
 
 #endif  // ifndef DONT_RESET_ON_RESTART
 // *************************************************************
 
 #if defined (__USE_LPCOPEN)
-    SystemInit();
+	SystemInit();
 #endif
 
-    //
-    // Copy the data sections from flash to SRAM.
-    //
-    unsigned int LoadAddr, ExeAddr, SectionLen;
-    unsigned int *SectionTableAddr;
+	//
+	// Copy the data sections from flash to SRAM.
+	//
+	unsigned int LoadAddr, ExeAddr, SectionLen;
+	unsigned int *SectionTableAddr;
 
-    // Load base address of Global Section Table
-    SectionTableAddr = &__data_section_table;
+	// Load base address of Global Section Table
+	SectionTableAddr = &__data_section_table;
 
-    // Copy the data sections from flash to SRAM.
-    while (SectionTableAddr < &__data_section_table_end) {
-        LoadAddr = *SectionTableAddr++;
-        ExeAddr = *SectionTableAddr++;
-        SectionLen = *SectionTableAddr++;
-        data_init(LoadAddr, ExeAddr, SectionLen);
-    }
-    // At this point, SectionTableAddr = &__bss_section_table;
-    // Zero fill the bss segment
-    while (SectionTableAddr < &__bss_section_table_end) {
-        ExeAddr = *SectionTableAddr++;
-        SectionLen = *SectionTableAddr++;
-        bss_init(ExeAddr, SectionLen);
-    }
+	// Copy the data sections from flash to SRAM.
+	while (SectionTableAddr < &__data_section_table_end) {
+		LoadAddr = *SectionTableAddr++;
+		ExeAddr = *SectionTableAddr++;
+		SectionLen = *SectionTableAddr++;
+		data_init(LoadAddr, ExeAddr, SectionLen);
+	}
+	// At this point, SectionTableAddr = &__bss_section_table;
+	// Zero fill the bss segment
+	while (SectionTableAddr < &__bss_section_table_end) {
+		ExeAddr = *SectionTableAddr++;
+		SectionLen = *SectionTableAddr++;
+		bss_init(ExeAddr, SectionLen);
+	}
 
 #if !defined (__USE_LPCOPEN)
 // LPCOpen init code deals with FP and VTOR initialisation
@@ -425,18 +427,18 @@ void ResetISR(void) {
 #endif
 
 #if defined (__REDLIB__)
-    // Call the Redlib library, which in turn calls main()
-    __main();
+	// Call the Redlib library, which in turn calls main()
+	__main();
 #else
     main();
 #endif
 
-    //
-    // main() shouldn't return, but if it does, we'll just enter an infinite loop
-    //
-    while (1) {
-        ;
-    }
+	//
+	// main() shouldn't return, but if it does, we'll just enter an infinite loop
+	//
+	while (1) {
+		;
+	}
 }
 
 //*****************************************************************************
@@ -444,61 +446,69 @@ void ResetISR(void) {
 // handler routines in your application code.
 //*****************************************************************************
 __attribute__ ((section(".after_vectors")))
-void NMI_Handler(void) {
-    while (1) {
-    }
+void NMI_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
 /* The fault handler implementation calls a function called
-prvGetRegistersFromStack(). */
+ prvGetRegistersFromStack(). */
 void HardFault_Handler(void)
 {
-    __asm volatile
-    (
-        " tst lr, #4                                                \n"
-        " ite eq                                                    \n"
-        " mrseq r0, msp                                             \n"
-        " mrsne r0, psp                                             \n"
-        " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler2_address_const                            \n"
-        " bx r2                                                     \n"
-        " handler2_address_const: .word prvGetRegistersFromStack    \n"
-    );
+	__asm volatile
+	(
+			" tst lr, #4                                                \n"
+			" ite eq                                                    \n"
+			" mrseq r0, msp                                             \n"
+			" mrsne r0, psp                                             \n"
+			" ldr r1, [r0, #24]                                         \n"
+			" ldr r2, handler2_address_const                            \n"
+			" bx r2                                                     \n"
+			" handler2_address_const: .word prvGetRegistersFromStack    \n"
+	);
 }
 __attribute__ ((section(".after_vectors")))
-void MemManage_Handler(void) {
-    while (1) {
-    }
+void MemManage_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void BusFault_Handler(void) {
-    while (1) {
-    }
+void BusFault_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void UsageFault_Handler(void) {
-    while (1) {
-    }
+void UsageFault_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void SVC_Handler(void) {
-    while (1) {
-    }
+void SVC_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void DebugMon_Handler(void) {
-    while (1) {
-    }
+void DebugMon_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void PendSV_Handler(void) {
-    while (1) {
-    }
+void PendSV_Handler(void)
+{
+	while (1) {
+	}
 }
 __attribute__ ((section(".after_vectors")))
-void SysTick_Handler(void) {
-    while (1) {
-    }
+void SysTick_Handler(void)
+{
+	while (1) {
+	}
 }
 
 //*****************************************************************************
@@ -508,7 +518,8 @@ void SysTick_Handler(void) {
 //
 //*****************************************************************************
 __attribute__ ((section(".after_vectors")))
-void IntDefaultHandler(void) {
-    while (1) {
-    }
+void IntDefaultHandler(void)
+{
+	while (1) {
+	}
 }

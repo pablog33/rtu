@@ -41,7 +41,7 @@ static void pole_task(void *par)
 		if (xQueueReceive(pole_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
 			lDebug(Info, "pole: command received");
 
-			pole.stalled = false; 		// If a new command was received, assume we are not stalled
+			pole.stalled = false; // If a new command was received, assume we are not stalled
 			pole.stalled_counter = 0;
 			pole.already_there = false;
 
@@ -121,8 +121,7 @@ void pole_init()
 
 	if (pole_supervisor_semaphore != NULL) {
 		// Create the 'handler' task, which is the task to which interrupt processing is deferred
-		xTaskCreate(pole_supervisor_task, "PoleSupervisor",
-		2048,
+		xTaskCreate(pole_supervisor_task, "PoleSupervisor", 2048,
 		NULL, POLE_SUPERVISOR_TASK_PRIORITY, NULL);
 		lDebug(Info, "pole: supervisor task created");
 	}
@@ -154,7 +153,6 @@ uint16_t pole_get_RDC_position()
 	return ad2s1210_read_position(pole.rdc);
 }
 
-
 /**
  * @brief	sets pole offset
  * @param 	offset		: RDC position for 0 degrees
@@ -169,7 +167,7 @@ void pole_set_offset(uint16_t offset)
  * @brief	returns status of the pole task.
  * @return 	copy of status structure of the task
  */
-struct mot_pap *pole_get_status(void)
+struct mot_pap* pole_get_status(void)
 {
 	mot_pap_read_corrected_pos(&pole);
 	return &pole;
