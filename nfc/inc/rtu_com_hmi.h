@@ -141,11 +141,6 @@ enum { RTU_NETVAR_SIZE = 9 };
 {
 	uint16_t posActArm;
 	uint16_t posActPole;
-	char ccwLimitArm[RTU_NETVAR_SIZE];
-	char cwLimitPole[RTU_NETVAR_SIZE];
-	char ccwLimitPole[RTU_NETVAR_SIZE];
-	char limitUp[RTU_NETVAR_SIZE];
-	char limitDown[RTU_NETVAR_SIZE];
 	char stallAlm[RTU_NETVAR_SIZE];
 	char onCondition[RTU_NETVAR_SIZE];
 	uint8_t armrRdcStatus;

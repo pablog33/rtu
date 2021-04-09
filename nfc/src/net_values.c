@@ -47,39 +47,10 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	pRTUDataTx->posActPole = pole_get_RDC_position();
 	on_condition = pArmStatus->already_there & pPoleStatus->already_there;
 
-
-
-
 	if((on_condition != on_condition_old) && on_condition)
 	{
 		on_condition_flag = true;
 	}
-
-
-	/*	-- ccwLimitArm --	*/
-	//if (pArmStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_RUN;");	}
-
-	/*	-- cwLimitPole --	*/
-	//if (pPoleStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->cwLimitPole, "%s", "PCW_RUN;");	}
-
-	/*	-- ccwLimitPole --	*/
-	//if (pPoleStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->ccwLimitPole, "%s", "PCC_RUN;");	}
-
-	/*	-- limitUp --	*/
-	//if (pLiftStatus->upLimit)	{	sprintf(pRTUDataTx->limitUp, "%s", "LUP_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->limitUp, "%s", "LUP_RUN;");	}
-
-	/*	-- limitDown --	*/
-	//if (pLiftStatus->downLimit)	{	sprintf(pRTUDataTx->limitDown, "%s", "LDW_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->limitDown, "%s", "LDW_RUN;");	}
 
 	/*	-- stallAlm --	*/
 	if (pArmStatus->stalled||pPoleStatus->stalled)	{	sprintf(pRTUDataTx->stallAlm, "%s", "STL_ALM;");	}
@@ -100,8 +71,8 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	//pRTUDataTx->status = iServerStatus ? iServerStatus : 0x00;
 
 	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %s %d %d %d ",
-	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
-	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->onCondition, pRTUDataTx->armrRdcStatus, pRTUDataTx->poleRdcStatus, pRTUDataTx->rtuStatus);
+	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp, pRTUDataTx->stallAlm, pRTUDataTx->onCondition, pRTUDataTx->armrRdcStatus,
+	pRTUDataTx->poleRdcStatus, pRTUDataTx->rtuStatus);
 
 	on_condition_old = on_condition;
 
