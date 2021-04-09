@@ -143,7 +143,6 @@ enum { RTU_NETVAR_SIZE = 9 };
 	uint16_t posActPole;
 	uint16_t velActArm;
 	uint16_t velActPole;
-	char cwLimitArm[RTU_NETVAR_SIZE];
 	char ccwLimitArm[RTU_NETVAR_SIZE];
 	char cwLimitPole[RTU_NETVAR_SIZE];
 	char ccwLimitPole[RTU_NETVAR_SIZE];

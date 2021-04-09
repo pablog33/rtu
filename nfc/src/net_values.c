@@ -57,10 +57,6 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 		on_condition_flag = true;
 	}
 
-	/*	-- cwLimitArm --	*/
-	//if (pArmStatus->cwLimitReached)	{	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_LIM;");	}
-	if (0){}
-	else {	sprintf(pRTUDataTx->cwLimitArm, "%s", "ACW_RUN;");	}
 
 	/*	-- ccwLimitArm --	*/
 	//if (pArmStatus->ccwLimitReached)	{	sprintf(pRTUDataTx->ccwLimitArm, "%s", "ACC_LIM;");	}
@@ -106,8 +102,7 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	//pRTUDataTx->status = iServerStatus ? iServerStatus : 0x00;
 
 	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %d %s %s %s %s %s %s %s %s %d %d %d ",
-	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp /*pRTUDataTx->velActArm*/, pRTUDataTx->velActPole,
-	pRTUDataTx->cwLimitArm, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
+	pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp /*pRTUDataTx->velActArm*/, pRTUDataTx->velActPole, pRTUDataTx->ccwLimitArm, pRTUDataTx->cwLimitPole, pRTUDataTx->ccwLimitPole,
 	pRTUDataTx->limitUp, pRTUDataTx->limitDown, pRTUDataTx->stallAlm, pRTUDataTx->onCondition, pRTUDataTx->armrRdcStatus, pRTUDataTx->poleRdcStatus, pRTUDataTx->rtuStatus);
 
 	on_condition_old = on_condition;
