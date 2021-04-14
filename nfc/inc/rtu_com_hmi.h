@@ -152,7 +152,7 @@ typedef struct {
 
 } RTUData_t;
 
-void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx);
+void NetValuesToSendFromRTU(int8_t iServerStatus, RTUData_t *pRTUDataTx);
 
 /*	----------------------------------------------------------------------------------------- */
 /*	----------------------------	-	TASK TRIGGER & STATUS HANDLER	-	----------------- */

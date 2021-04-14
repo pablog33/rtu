@@ -25,7 +25,7 @@
 
 static uint16_t prvFormatoTramaRecv(uint16_t uiLenDataRecv);
 
-void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
+void NetValuesToSendFromRTU(int8_t iServerStatus, RTUData_t *pRTUDataTx)
 {
 
 	uint16_t temp = temperature_read();
@@ -61,7 +61,9 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 	/*	-- status --	*/
 	pRTUDataTx->rtuStatus = iServerStatus;
 
-	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %s %s %d %d %d",
+//	IMPORTANT: Add space after last element format specifier in snprintf so -split- HMIcomRTU.py function
+//	operates properly for the last variable in buffer sent by ethernet frame
+	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %s %s %d %d %d ",
 			pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp,
 			pRTUDataTx->stallAlm, pRTUDataTx->onCondition,
 			pRTUDataTx->armRdcStatus, pRTUDataTx->poleRdcStatus,
@@ -76,7 +78,7 @@ int16_t NetValuesReceivedFromHMI(HMIData_t *HMIData, HMICmd_t *HMICmd,
 		uint16_t uiLenDataRecv)
 { /*	HMI_NETVAR_SIZE + 1: Para tener en cuenta el fin de cadena en caracteres '\0' 	*/
 
-	uint16_t iServerStatus = ERR_OK;
+	uint8_t iServerStatus = ERR_OK;
 
 	if ((iServerStatus = prvFormatoTramaRecv(uiLenDataRecv)) == ERR_OK) {
 		/*	-- clientID --*/

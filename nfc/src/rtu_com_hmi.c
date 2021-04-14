@@ -45,7 +45,7 @@ static void tcp_thread(void *arg)
 			HMIData_t *pHMIData;
 			HMICmd_t HMICmd;
 			RTUData_t RTUDataTx;
-			uint16_t iServerStatus = 0x00;
+			uint8_t iServerStatus = 0x00;
 			uint32_t cycleCount = 0;
 
 			newconn->recv_timeout = RCV_TIMEO;
