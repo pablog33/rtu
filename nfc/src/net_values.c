@@ -47,35 +47,21 @@ void NetValuesToSendFromRTU(int16_t iServerStatus, RTUData_t *pRTUDataTx)
 		on_condition_flag = true;
 	}
 
-	/*	-- stallAlm --	*/
-	if (pArmStatus->stalled || pPoleStatus->stalled) {
-		sprintf(pRTUDataTx->stallAlm, "%s", "STL_ALM;");
-	} else {
-		sprintf(pRTUDataTx->stallAlm, "%s", "STL_RUN;");
-	}
+	pArmStatus->stalled = FALSE;
 
-	//sprintf(pRTUDataTx->stallAlm, "%s", (pArmStatus->stalled||pPoleStatus->stalled) ? "STL_ALM;" : "STL_RUN;");
+	/*	-- stallAlm --	*/
+	sprintf(pRTUDataTx->stallAlm, "%s",
+			(pArmStatus->stalled || pPoleStatus->stalled) ?
+					"STL_ALM;" : "STL_RUN;");
 
 	/* -- onCOndition -- */
-	if (on_condition_flag) {
-		sprintf(pRTUDataTx->onCondition, "%s", "ON_COND;");
-	} else {
-		sprintf(pRTUDataTx->onCondition, "%s", "NOT_POS;");
-	}
-
-	//sprintf(pRTUDataTx->onCondition, "%s", on_condition_flag ? "ON_COND;" : "NOT_POS;");
+	sprintf(pRTUDataTx->onCondition, "%s",
+			on_condition_flag ? "ON_COND;" : "NOT_POS;");
 
 	/*	-- status --	*/
-	if (iServerStatus) {
-		pRTUDataTx->rtuStatus = iServerStatus;
-	} else {
-		pRTUDataTx->rtuStatus = 0x00;
-	}
+	pRTUDataTx->rtuStatus = iServerStatus;
 
-	//pRTUDataTx->status = iServerStatus ? iServerStatus : 0x00;
-
-	snprintf(pRTUDataTx->buffer, 100,
-			"%d %d %d %s %s %d %d %d",
+	snprintf(pRTUDataTx->buffer, 100, "%d %d %d %s %s %d %d %d",
 			pRTUDataTx->posActArm, pRTUDataTx->posActPole, temp,
 			pRTUDataTx->stallAlm, pRTUDataTx->onCondition,
 			pRTUDataTx->armRdcStatus, pRTUDataTx->poleRdcStatus,
